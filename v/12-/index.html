@@ -1,0 +1,167 @@
+<head>
+   <link rel="shortcut  icon" href="az-128.ico" type="image/x-icon" />
+   <meta charset="utf-8">
+   <title>啊这函数画板精简版&emsp;v12</title>
+   <style type="text/css">@import"gi.CSS";</style>
+   <style type="text/css" id="szys">
+
+   </style>
+   <script type="text/javascript" src="dc.JS">
+   </script>
+   <script type="text/javascript" src="s.js">
+   </script>
+ </head>
+ <body style="cursor: default;" id="body">
+  <div id="azhshb" style="position: fixed; left: 0px; top: 0px; width: 100%; height: 100%; color: black; background-color: white;">
+<div id="beijc" style="z-index: -1;position: absolute;left:0px;top:0px;width: 100%;height: 100%;background-image: url('');background-size:cover;background-position: center;filter: brightness(120%);"><!--背景图片--></div>
+    <div id="edafs">
+      <div class="vfr" style="top:0px;left:0px; width: 40px; height: 20px;" id="text-2">缩</div>
+      <input id="fvfrv" class="vfr" style="top:0px;left:45px; width: 100px; height: 20px;" value="20" onchange="zhudbianhua()">
+      <div class="vfr" style="top:25px;left:0px; width: 85px; height: 20px;" id="text-3">精益求精</div>
+      <input id="gdrft" class="vfr" style="top:25px;left:85px; width: 60px; height: 20px;" value="100" onchange="zhudbianhua()">
+      <div class="vfr" style="top:0px;left:150px; width: 100px; height: 20px;" id="text-4">坐·X</div>
+      <input id="decsx" class="vfr" style="top:0px;left:245px; width: 45px; height: 20px;" value="300" onchange="zhudbianhua()">
+      <div class="vfr" style="top:25px;left:150px; width: 100px; height: 20px;" id="text-5">坐·Y</div>
+      <input id="decsy" class="vfr" style="top:25px;left:245px; width: 45px; height: 20px;" value="400" onchange="zhudbianhua()">
+      <div class="vfr" style="top:0px;left:300px; width: 100px; height: 20px;" id="text-6">坐·长</div>
+      <input id="bhcv" class="vfr" style="top:0px;left:390px; width: 45px; height: 20px;" value="1000" onchange="zhudbianhua()">
+      <div class="vfr" style="top:25px;left:300px; width: 100px; height: 20px;" id="text-7">坐·宽</div>
+      <input id="edsde" class="vfr" style="top:25px;left:390px; width: 45px; height: 20px;" value="800" onchange="zhudbianhua()">
+      <div class="vfr" style="top:0px;left:440px; width: 80px; height: 20px;" id="text-8">鼠·X</div>
+      <input id="gbftr" class="vfr" style="top:0px;left:520px; width: 60px; height: 20px;" value="0.000">
+      <div class="vfr" style="top:25px;left:440px; width: 80px; height: 20px;" id="text-9">鼠·Y</div>
+      <input id="oi9l" class="vfr" style="top:25px;left:520px; width: 60px; height: 20px;" value="0.000">
+      <div class="vfr" style="top:0px;left:650px; width: 85px; height: 20px;" id="text-0">超渡函数</div>
+      <input id="grdgr" class="vfr" style="top:0px;left:750px; width: 200px; height: 20px;" value="" placeholder="函数式">
+      <input id="wadwd" class="vfr" style="top:25px;left:650px; width: 60px; height: 20px;" value="" placeholder="五彩斑斓">
+      <div class="vfr" style="top:50px;left:650px; width: 85px; height: 20px;" id="text-1">函数维度</div>
+      <input id="hs-sm" class="vfr" style="top:50px;left:720px; width: 60px; height: 20px;" value="" placeholder="下">
+      <input id="hs-zd" class="vfr" style="top:50px;left:810px; width: 60px; height: 20px;" value="" placeholder="上">
+      <input class="vfr" type="button" style="top:25px;left:730px; width: 60px; height: 20px;" id="botton-0" value="渡劫" onclick="tianjiaxinhanshu()">
+      <input class="vfr" type="button" style="top:25px;left:870px; width: 60px; height: 20px;" id="botton-2" value="更多" onclick="xhysyc('more')">
+    
+      <input class="vfr" type="button" style="top:50px;left:500px; width: 100px; height: 20px;" id="wgxsqhan" value="网格：显示" onclick="xiehuanwanggexians()">
+      <input class="vfr" type="button" style="top:50px;left:380px; width: 100px; height: 20px;" id="wgxsqhan" value="设置" onclick="xhysyc('setting')">
+     </div>
+    <div id="zbx" onmousedown="zbxyd('m')" ontouchstart="zbxyd('t')" touchstart="zbxyd('on on t')" style="touch-action: none; width: 600px; height: 800px;">
+      <div class="az">推荐使用啊这函数画板</div>
+      <div class="az" style="font-size: 20;top: 50px;">http://bjsdfz.net/m/azhs/</div>
+      <div id="yams" class="vfr" style="display: -1; top:10px;right:0px; width: 90px; height: 20px;">用时50ms</div>
+      <div id="yzhou" style="left: 300px;"></div>
+      <div id="xzhou" style="top: 400px;"></div>
+      <canvas id="divdis" width="600" height="800" style="width: 600px; height: 800px;">
+      </canvas>
+    </div>
+    <div id="caozuolan" style="position: absolute; left: 650px; top: 500px; width: 300px; height: 50px; background-color: rgba(0, 0, 0, 0); z-index: 2; box-shadow: 0 0 30px var(--bjsdfz); backdrop-filter: blur(15px);">
+      <select style=" position: absolute; top:3px;left:5px; width: 100px; height: 20px;background-color: rgba(0, 0, 0, 0);" class="" id="zxczxz" onchange="">
+        <option value="1">构造交点</option>
+        <option value="2">构造过几点的函数</option>
+        <option value="3">构造过两点的线段</option>
+        <option value="4">以点为圆心，常量为半径构造圆</option>
+        <option value="10">构造中点</option>
+        <option value="5">度量坐标</option>
+        <option value="6">度量距离</option>
+        <option value="7">删除</option>
+        <option value="8">隐藏</option>
+        <option value="9">显示</option>
+      </select>
+      <input class="vfr" type="button" style="top:3px;left:110px; width: 100px; height: 20px;" value="执行操作" onclick="qrcz()">
+      <input class="vfr" type="button" style="top:3px;left:215px; width: 60px; height: 20px;" value="刷新" onclick="huizhi()">
+      <input class="vfr" type="button" style="top:28px;left:5px; width: 80px; height: 20px;" value="刷新常量值" onclick="sxcl()">
+      <input class="vfr" type="button" style="top:28px;left: 215px; width: 70px; height: 20px;" value="清空选择" onclick="qkxz()">
+    </div>
+    <div id="hslbxs" style="width: 300px; left: 650px; height: 400px; top: 100px; border-radius: 20px 20px 0px 0px;" class="red-kuang">
+      <div style="position: absolute;;width: 100%;height:100%;top:0px;left:0px;z-index: 0;" onclick="qkxz()">
+      </div>
+    </div>
+    <div id="qtgn" style="position: absolute; width: 300px; left: 650px; height: 170px; top: 560px;">
+      <div id="gn1" style="width: 300px; left: 0px;height: 170px;top:0px; display: block;" class="red-kuang">
+        <div class="vfr" style="top:0px;left:30px; width: 250px; height: 20px;">备份与恢复:</div>
+        <input id="klkl" class="vfr" style="top:50px;left:30px; width: 250px; height: 20px;" value="" placeholder="在此粘贴恢复码或从此复制恢复码">
+        <input class="vfr" type="button" style="top:25px;left:30px; width: 60px; height: 20px;" value="导入" onclick="huif()">
+        <input class="vfr" type="button" style="top:25px;left:130px; width: 60px; height: 20px;" value="导出" onclick="beif()">
+      </div>
+      <div id="gn5" style="width: 300px; left: 0px;height: 170px;top:0px; display: none;" class="red-kuang">
+        <div class="vfr" style="top:10px;left:10px; width: 250px; height: 20px;" id="text-20">工·算盘</div>
+        <input id="cddddcdcdcdc" class="vfr" style="top:40px;left:10px; width: 220px; height: 20px;" value="" placeholder="输入要计算的表达式(啊这)">
+        <input class="vfr" type="button" style="top:40px;left:235px; width: 50px; height: 20px;" value="计算" onclick="azfy('js')">
+        <input id="cdshhjshjdcshjchj" class="vfr" style="top:70px;left:10px; width: 250px; height: 20px;" value="" placeholder="计算结果">
+        <div style="position: absolute; width: 280px; left: 10px;height: 300px;top:90px;text-align: left;word-wrap:break-word;word-break:break-all;  ">
+        </div>
+      </div>
+      <div id="gn2" style="width: 300px; left: 0px;height: 170px;top:0px; display: none;" class="red-kuang">
+        <div class="vfr" style="top:10px;left:30px; width: 250px; height: 20px;" id="text-15">功·渡劫点</div>
+        <input id="egfdgfbcujsx" class="vfr" style="top:40px;left:30px; width: 100px; height: 20px;" value="" placeholder="点的x坐标">
+        <input id="egfdgfbcujsy" class="vfr" style="top:40px;left:150px; width: 100px; height: 20px;" value="" placeholder="点的y坐标">
+        <input class="vfr" type="button" style="top:70px;left:30px; width: 70px; height: 20px;" value="新建" onclick="xjdqz()">
+      </div>
+      <div id="gn3" style="width: 300px; left: 0px;height: 170px;top:0px; display: none;" class="red-kuang">
+        <div class="vfr" style="top:10px;left:30px; width: 250px; height: 20px;" id="text-16">功·渡劫量</div>
+        <input id="vffrrrrrrx" class="vfr" style="top:40px;left:30px; width: 100px; height: 20px;" value="" placeholder="常量名">
+        <input id="vffrrrrrry" class="vfr" style="top:40px;left:150px; width: 100px; height: 20px;" value="" placeholder="值">
+        <input class="vfr" type="button" style="top:70px;left:30px; width: 70px; height: 20px;" value="新建" onclick="xjclqz()">
+      </div>
+      <div id="gn4" style="width: 300px; left: 0px;height: 170px;top:0px; display: none;" class="red-kuang">
+        <div class="vfr" style="top:10px;left:30px; width: 250px; height: 20px;" id="text-17">功·渡劫圆</div>
+        <input id="tgtgtgtgtg" class="vfr" style="top:40px;left:30px; width: 80px; height: 20px;" value="" placeholder="心·X">
+        <input id="frfrfrfrfr" class="vfr" style="top:40px;left:120px; width: 80px; height: 20px;" value="" placeholder="心·Y">
+        <input id="paoifrvohi" class="vfr" style="top:70px;left:30px; width: 100px; height: 20px;" value="" placeholder="圆的一半">
+        <div style="position: absolute;top:100px;left:30px; width: 200px; height: 20px;">
+          <input id="ghwdvecd" type="radio" name="gender" value="s" checked="">上半圆
+          <input id="geaduytfwev" type="radio" name="gender" value="x">下半圆</div>
+        <input class="vfr" type="button" style="top:130px;left:30px; width: 70px; height: 20px;" value="画" onclick="azfy('huayuan')">
+      </div>
+     </div>
+    </div>
+    <select style="cursor: default; position: absolute; width: 300px; left: 650px; height: 30px; top: 745px; background-color: rgba(0, 0, 0, 0);" class="red-kuang" id="gnxz" onchange="gnqh()">
+      <option value="gn1" id="text-10">功·出入</option>
+      <option value="gn2" id="text-11">功·渡劫点</option>
+      <option value="gn3" id="text-12">功·渡劫量</option>
+      <option value="gn4" id="text-13">功·渡劫圆</option>
+      <option value="gn5" id="text-19">工·算盘</option>
+
+    </select>
+    <div id="drdrdr" class="red-kuang" style="width: 300px; left: 650px; height: 100px; top: 790px;">
+      <div id="fuck" onclick="az()" onselectstart="return false" onbeforecopy="return false">善哉</div>
+      <div id="azcs" style="display: none;">已啊这0次！</div>
+    </div>
+    <div id="more" class="red-kuang" style="top:0px;bottom:0px;margin: auto;left:0px;right: 0px;width: 500px;height: 400px;background-color: rgba(0, 0, 0, 0);z-index: 10; display: none;">
+      <div style="    position: absolute;top:10px;right: 10px;width: 20px;height: 20px;font-size: 18px;z-index: 2;" onclick="xhysyc('more')">X</div>
+      <div class="az" style="font-size: 60;left:0px;top: 20px;width: 100%;text-align: center;">啊这函数画板</div>
+      <div class="az" style="font-size: 25;left:0px;top: 100px;width: 100%;text-align: center;">* @version v12* @date 2022-06-24</div>
+      <div id="rizhi" style="position: absolute;top:150px;left:40px;width: 420px;height: 150px;font-size: 18px;border: 1px solid var(--bjsdfz);overflow: auto;border-radius: 10px;">
+      </div>
+    </div>
+    <div id="setting" class="red-kuang" style="inset: 0px; margin: auto; width: 500px; height: 400px; background-color: rgba(0, 0, 0, 0); z-index: 10; display: none;">
+     <div style="    position: absolute;top:10px;right: 10px;width: 20px;height: 20px;font-size: 18px;z-index: 2;" onclick="xhysyc('setting')">X</div>
+     <div class="az" style="font-size: 60;left:0px;top: 20px;width: 100%;text-align: center;">设置</div>
+     <input class="vfr" type="button" style="top:30px;left:30px; width: 120px; height: 20px;" value="清空设置" onclick="hfccsz()">
+     <div style="position: absolute;top:120px;left:40px;width: 420px;height: 250px;font-size: 18px;border: 1px solid var(--bjsdfz);overflow: auto;border-radius: 0px;">
+     <div class="setting">
+       <div class="vfr" style="top: 0px; bottom: 0px; margin: auto;left: 15px; height: 40px; width: 130px;line-height: 40px;" onclick="settingxunwen('主题颜色',0)">主题颜色</div>
+     </div>
+     <div class="setting">
+       <div class="vfr" style="top: 0px; bottom: 0px; margin: auto;left: 15px; height: 40px; width: 130px;line-height: 40px;" onclick="settingxunwen('主题颜色-透明',1)">主题颜色-透明</div>
+     </div>
+     <div class="setting">
+       <div class="vfr" style="top: 0px; bottom: 0px; margin: auto;left: 15px; height: 40px; width: 130px;line-height: 40px;" onclick="settingxunwen('文字颜色',2)">文字颜色</div>
+     </div>
+     <div class="setting">
+       <div class="vfr" style="top: 0px; bottom: 0px; margin: auto;left: 15px; height: 40px; width: 130px;line-height: 40px;" onclick="settingxunwen('文字颜色-透明',3)">文字颜色-透明</div>
+     </div>
+     <div class="setting">
+       <div class="vfr" style="top: 0px; bottom: 0px; margin: auto;left: 15px; height: 40px; width: 130px;line-height: 40px;" onclick="settingxunwen('背景颜色',4)">背景颜色</div>
+     </div>
+     <div class="setting">
+       <div class="vfr" style="top: 0px; bottom: 0px; margin: auto;left: 15px; height: 40px; width: 130px;line-height: 40px;" onclick="settingxunwen('背景图片url',5)">背景图片url</div>
+     </div>
+     </div>
+   </div>
+  </div>
+  <div id="deuse" style="position: absolute;width: 100%;height:100%;top:0px;left:0px;z-index: 114514;backdrop-filter: blur(5px);-webkit-backdrop-filter: blur(5px);display: none;">
+  </div>
+
+
+</body>
+ 
+ </html>
