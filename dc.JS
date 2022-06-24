@@ -544,6 +544,7 @@ function zhudbianhua() {
     xianshikuandu = Number(document.getElementById("bhcv").value)
     xianshigaodu = Number(document.getElementById("edsde").value)
     bianhau()
+    cxjswgjj()
     huizhi()
 }
 
