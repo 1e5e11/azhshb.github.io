@@ -59,7 +59,7 @@ var newgetjxsn = [] //算过的解析式
 var newgetjxsz = [] //算过的解析式的各种值
 
 var ycys = "#00ff0080"
-var bjsdfzcolor = "#7c0a2180"
+
 //var xzbqyc="#00ff0080"
 
 var pxtonum = hxxianshi / xianshikuandu
@@ -173,7 +173,7 @@ window.onload = function() {
     huizhi()
     var set = localStorage.getItem("setting")
     if (set == undefined) {
-        zdyset = ["#7c0a21", "#7c0a2164", "black", "rgba(0, 0, 0, 0.5)", "white", "", "false"]
+        zdyset = ["#7c0a21", "#7c0a2164", "black", "rgba(128, 128, 128, 0.7)", "white", "", "false"]
     } else {
         zdyset = zfc_to_sz(set)
     }
@@ -467,13 +467,13 @@ function madewg() { //绘制网格
     for (var i = jzuo; i < xianshikuandu; i = i + (fq1 * numtopx)) {
         hbck.lineWidth = 1;
         hbck.beginPath();
-        hbck.strokeStyle = "#7c0a2132";
+        hbck.strokeStyle = zdyset[1];
         hbck.moveTo(i, 0);
         hbck.lineTo(i, xianshigaodu)
         hbck.stroke();
         if (Math.abs(i - ydisX) < 0.01) {} else {
             hbck.font = "10px bold 黑体";
-            hbck.fillStyle = "#7c0a21";
+            hbck.fillStyle = zdyset[0];
             hbck.textAlign = "center";
             hbck.textBaseline = "middle";
             hbck.fillText(String((pxtonum * (i - ydisX)).toFixed(1)), i, ydisY + 10);
@@ -484,13 +484,13 @@ function madewg() { //绘制网格
     for (var i = jzuo; i < xianshigaodu; i = i + (fq1 * numtopx)) {
         hbck.lineWidth = 0;
         hbck.beginPath();
-        hbck.strokeStyle = "#7c0a2132";
+        hbck.strokeStyle = zdyset[1];
         hbck.moveTo(0, i);
         hbck.lineTo(xianshikuandu, i)
         hbck.stroke();
         if (Math.abs(i - ydisY) < 0.01) {} else {
             hbck.font = "10px bold 黑体";
-            hbck.fillStyle = "#7c0a21";
+            hbck.fillStyle = zdyset[0];
             hbck.textAlign = "center";
             hbck.textBaseline = "middle";
             hbck.fillText(String((-1 * pxtonum * (i - ydisY)).toFixed(1)), ydisX - 10, i);
@@ -730,7 +730,7 @@ function xz(m) { //添加 移除选择
         }
     } else {
         xzlb.push(m)
-        document.getElementById(m).style.backgroundColor = bjsdfzcolor
+        document.getElementById(m).style.backgroundColor = zdyset[1]
     }
     huizhi()
 }
@@ -1191,7 +1191,7 @@ function zxcz() {
         for (var i = 0; i < xzlb.length; i++) {
             arrremove(yclb, xzlb[i])
             if (isInArray(xzlb, xzlb[i]) == true) {
-                document.getElementById(xzlb[i]).style.backgroundColor = bjsdfzcolor
+                document.getElementById(xzlb[i]).style.backgroundColor = zdyset[1]
             } else {
                 document.getElementById(xzlb[i]).style.backgroundColor = "rgba(0,0,0,0)"
             }
@@ -1279,7 +1279,7 @@ function settingxunwen(j, num) {
 
 function hfccsz() { //清空设置
     if (confirm("确定要清空设置？") == true) {
-        zdyset = zdyset = ["#7c0a21", "#7c0a2164", "black", "rgba(0, 0, 0, 0.5)", "white", "", "false"]
+        zdyset = zdyset = ["#7c0a21", "#7c0a2164", "black", "rgba(128, 128, 128, 0.7)", "white", "", "false"]
         localStorage.setItem("setting", sz_to_zfc(zdyset))
         windowonload()
 
