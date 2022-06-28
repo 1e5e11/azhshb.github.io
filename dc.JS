@@ -1,13 +1,14 @@
-var thisv = 12
+var thisv = 13
+var thisdate = "2022-06-28"
 /*
-az v12
+az v13
 更新日志
 [增加]:太多了写不过来
 [修复]:太多了写不过来
 [更改]:太多了写不过来
 [移除]:移除了him 太多了写不过来
 */
-var update = ["新增修仙模式", "新增很多自定义功能", "新增坐标系网格"]
+var update = ["修复取值范围不正确bug", "修复了触屏操作坐标系幽灵漂移", "将网格显示于函数之下", "修复了滚动条黑框"]
 
 
 
@@ -85,7 +86,7 @@ function windowonload() {
 
 
 
-    wonjm()
+
     jstext = ["啊这函数画板", "已加载完毕", "新增功能：", "啊这"]
     if (zdyset[6] == "true") {
         jstext = ["啊这函数画板已于第", "重天", "新法宝：", "善哉"]
@@ -127,6 +128,9 @@ function windowonload() {
     document.getElementById("beijc").style.backgroundImage = "url(" + zdyset[5] + ")"
 
 
+
+    document.getElementById("title").innerHTML = "啊这函数画板&emsp;v" + thisv
+    document.getElementById("morebbxians").innerHTML = "* @version v" + thisv + "* @date " + thisdate
 
 
 
@@ -200,7 +204,7 @@ function zbxyd() {
     //document.getElementById("wanggexian").innerHTML=""
     hbck.clearRect(0, 0, xianshikuandu, xianshigaodu)
     document.ontouchmove = function(h) {
-        fsdcds(h, 't')
+
         if (ydzbxcs == 1) {
             ydzbxcs = 0
             disX = h.touches[0].clientX - xsx
@@ -212,21 +216,19 @@ function zbxyd() {
                 document.getElementById("xnsb").style.display = "block"
             }
         } else {
-            var x = h.touches[0].clientX - disX
-            var y = h.touches[0].clientY - disY
-            ydisX = x
-            ydisY = y
-            //l(cpmsgbcs,cpmsgb,"yt")
+
             if (cpmsgb == "t") {
-                //l("触碰改坐标")
-                //bianhau()
+                var x = h.touches[0].clientX - disX
+                var y = h.touches[0].clientY - disY
+                ydisX = x
+                ydisY = y
                 document.getElementById("yzhou").style.left = x + "px"
                 document.getElementById("xzhou").style.top = y + "px"
             }
         }
     }
     document.onmousemove = function(h) {
-        fsdcds(h, 'm')
+
         if (ydzbxcs == 1) {
             ydzbxcs = 0
             disX = h.clientX - xsx
@@ -237,14 +239,11 @@ function zbxyd() {
                 cpmsgbcs = 1
             }
         } else {
-            var x = h.clientX - disX
-            var y = h.clientY - disY
-            ydisX = x
-            ydisY = y
-            //l(cpmsgbcs,cpmsgb,"ym")
             if (cpmsgb == "m") {
-                //l("鼠标改坐标")
-                //bianhau()
+                var x = h.clientX - disX
+                var y = h.clientY - disY
+                ydisX = x
+                ydisY = y
                 document.getElementById("yzhou").style.left = x + "px"
                 document.getElementById("xzhou").style.top = y + "px"
             }
@@ -348,7 +347,7 @@ function hzqx(jxs, q, z) {
     } else {
         var xsqd = jxs_l_for_azhs(q)
     }
-    if (z == undefined || z == "" || z < ghughughughguhguhguhgughu + hxxianshi) {
+    if (z == undefined || z == "" || z > ghughughughguhguhguhgughu + hxxianshi) {
         var xhzd = ghughughughguhguhguhgughu + hxxianshi //循环终点
     } else {
         var xhzd = jxs_l_for_azhs(z)
@@ -550,7 +549,13 @@ function zhudbianhua() {
 
 function huizhi() {
     var start = new Date().getTime() // 开始时间
-    hbck.clearRect(0, 0, xianshikuandu, xianshigaodu)
+    hbck.clearRect(0, 0, xianshikuandu, xianshigaodu) //清空画板
+
+    if (huizhiwangge == true) { //绘制网格
+        madewg()
+    }
+
+
     for (var jr = 0; jr < hslb.length; jr++) { //画函数
         if (hslb[jr] == "") {} else {
             if (hslb[jr].split("|")[1] == undefined || hslb[jr].split("|")[1] == "") {
@@ -597,9 +602,7 @@ function huizhi() {
         }
     }
 
-    if (huizhiwangge == true) {
-        madewg()
-    }
+
     var end = new Date().getTime() // 结束时间
     document.getElementById("yams").innerHTML = "用时" + String(end - start) + "ms"
 
@@ -640,12 +643,7 @@ function cjxhs(jxs, clorer, zuixiao, zuida) { //添加函数
     if (clorer == "" || clorer == undefined) {
         clorer = "black"
     }
-    if (zuixiao == "") {} else {
-        var zuixiao = jxs_l_for_azhs(zuixiao)
-    }
-    if (zuida == "") {} else {
-        var zuida = jxs_l_for_azhs(zuida)
-    }
+
     hslb.push(jxs + "|" + clorer + "|" + zuixiao + "|" + zuida)
     /*  函数的数据模型：  解析式|颜色|取值下线|取自上限
      */
@@ -1100,12 +1098,12 @@ function zxcz() {
                 return false
             }
         }
-        if (azgetdzb(Number(xzlb[0].substring(1, 2)), 0) < azgetdzb(Number(xzlb[1].substring(1, 2)), 0)) {
-            var x = "getdzb(" + Number(xzlb[0].substring(1, 2)) + ",0)"
-            var s = "getdzb(" + Number(xzlb[0].substring(1, 2)) + ",1)"
+        if (jxs_l_for_azhs(String(azgetdzb(Number(xzlb[0].substring(1, 2)), 0))) < jxs_l_for_azhs(String(azgetdzb(Number(xzlb[1].substring(1, 2)), 0)))) {
+            var x = "getdzb(" + xzlb[0].substring(1, 2) + ",0)"
+            var s = "getdzb(" + xzlb[1].substring(1, 2) + ",0)"
         } else {
-            var s = azgetdzb(Number(xzlb[0].substring(1, 2)), 0)
-            var x = azgetdzb(Number(xzlb[1].substring(1, 2)), 0)
+            var s = "getdzb(" + xzlb[0].substring(1, 2) + ",0)"
+            var x = "getdzb(" + xzlb[1].substring(1, 2) + ",0)"
         }
         cjxhs("getjxs(x," + c.substring(0, c.length - 1) + ")", "black", x, s)
         huizhi()
