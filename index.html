@@ -52,11 +52,13 @@
        <input  class="vfr" type="button" style="top:25px;left:870px; width: 60px; height: 20px;" id="botton-2" value="更多..." onclick="xhysyc('more')" />
      
        <input  class="vfr" type="button" style="top:50px;left:500px; width: 100px; height: 20px;" id="wgxsqhan" value="网格：显示" onclick="xiehuanwanggexians()" />
-       <input  class="vfr" type="button" style="top:50px;left:380px; width: 100px; height: 20px;" id="wgxsqhan" value="设置" onclick="xhysyc('setting')" />
+       <input  class="vfr" type="button" style="top:50px;left:380px; width: 100px; height: 20px;" id="" value="设置" onclick="xhysyc('setting')" />
+       <input  class="vfr" type="button" style="top:50px;left:260px; width: 100px; height: 20px;" id="ydms" value="模式：移动" onclick="qhsbydzbxms()" />
       </div>
-     <div id="zbx" onmousedown="zbxyd('m')" ontouchstart="zbxyd('t')" touchstart="zbxyd('on on t')" style="touch-action: none;">
+     <div id="zbx" onmousedown="zbxyd('m')" ontouchstart="zbxyd('t')" touchstart="zbxyd('on on t')" style="touch-action: none;" >
        <div class="az">推荐使用啊这函数画板</div>
-       <div class="az" style="font-size: 20;top: 50px;">http://bjsdfz.net/m/azhs/</div>
+       <div class="az" style="font-size: 20;top: 50px;" id="azhe">http://bjsdfz.net/m/azhs/</div>
+       <div class="az" style="font-size: 20;top: 90px;display:none;" id="fuuuuo" >啊这工作室</div>
        <div id="yams" class="vfr" style="display: -1; top:10px;right:0px; width: 90px; height: 20px;">用时0ms</div>
 
 
@@ -85,6 +87,7 @@
          <option value="4">以点为圆心，常量为半径构造圆</option>
          <option value="10">构造中点</option>
          <option value="5">度量坐标</option>
+         <option value="11">度量角度</option>
          <option value="6">度量距离</option>
          <option value="7">删除</option>
          <option value="8">隐藏</option>
@@ -173,6 +176,7 @@
          <div class="vfr" style="top:10px;left:30px; width: 250px; height: 20px;"  id="text-15" >新建点...</div>
          <input id="egfdgfbcujsx" class="vfr" style="top:40px;left:30px; width: 100px; height: 20px;" value="" placeholder="点的x坐标" />
          <input id="egfdgfbcujsy" class="vfr" style="top:40px;left:150px; width: 100px; height: 20px;" value="" placeholder="点的y坐标" />
+         <input id="egfdgfbcujsz" class="vfr" style="top:70px;left:150px; width: 100px; height: 20px;" value="" placeholder="点的名字" />
          <input  class="vfr" type="button" style="top:70px;left:30px; width: 70px; height: 20px;" value="新建" onclick="xjdqz()" />
        </div>
        <div id="gn9" style="width: 300px; left: 0px;height: 170px;top:0px; display: none;" class="red-kuang">
@@ -383,8 +387,9 @@
        <div class="az" style="font-size: 16;left:40px;top: 310px;width: 300px;text-align: left;" id="text-18">特别感谢：</div>
        <div onclick="openjc('https://mathjs.org/')" style="position: absolute;top:350px;left:40px;width: 66px;height: 20px;background-image: url(https://www.mathjs.cn/css/img/mathjs_330x100.png);background-size: cover;" title="math.js">
        </div>
-       <div onclick="openjc('https://zh.numberempire.com')" style="position: absolute;top:335px;left:120px;width: 50px;height: 50px;background-image: url(https://zh.numberempire.com/images/pi-ball.png);background-size: cover;" title="number empire">
-       </div>
+       <div onclick="openjc('https://zh.numberempire.com')" style="position: absolute;top:335px;left:120px;width: 50px;height: 50px;background-image: url(https://zh.numberempire.com/images/pi-ball.png);background-size: cover;" title="number empire">       </div>
+        <div onclick="openjc('https://azhe.studio')" style="position: absolute;top:335px;left:200px;width: 50px;height: 50px;background-image: url(az-128.ico);background-size: cover;" title="啊这工作室-出品"></div>
+
      </div>
      <div id="setting" class="red-kuang" style="top:0px;bottom:0px;margin: auto;left:0px;right: 0px;width: 500px;height: 400px;background-color: rgba(0, 0, 0, 0);z-index: 10; display: none;">
       <div style="    position: absolute;top:10px;right: 10px;width: 20px;height: 20px;font-size: 18px;z-index: 2;" onclick="xhysyc('setting')">X</div>
@@ -411,6 +416,12 @@
       </div>
       <div class='setting'>
         <div class="vfr" style="top: 0px; bottom: 0px; margin: auto;left: 15px; height: 40px; width: 130px;line-height: 40px;" onclick="settingxunwen('修仙模式',6)">修仙模式</div>
+      </div>
+      <div class='setting'>
+        <div class="vfr" style="top: 0px; bottom: 0px; margin: auto;left: 15px; height: 40px; width: 130px;line-height: 40px;" onclick="settingxunwen('网格间距',7)">网格间距</div>
+      </div>
+      <div class='setting'>
+        <div class="vfr" style="top: 0px; bottom: 0px; margin: auto;left: 15px; height: 40px; width: 130px;line-height: 40px;" onclick="settingxunwen('选择容差',8)">选择容差</div>
       </div>
       </div>
     </div>
