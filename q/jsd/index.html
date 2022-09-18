@@ -36,6 +36,10 @@ hbck.lineWidth = 2
     var x=0,y=0,z=0
     var qx=400,qy=400,qz=0
     var alpha,beta,gamma
+    window.addEventListener('devicepressure', function (event) {
+alert('az')
+ 
+        }, false);
     if (window.DeviceOrientationEvent) {
         window.addEventListener('deviceorientation', function (event) {
             var a = document.getElementById('alpha'),
@@ -84,6 +88,10 @@ qy=qy+Math.cos(Math.PI/2+a2)*sd*0.4
 document.getElementById('qx').innerHTML=qx
 document.getElementById('qy').innerHTML=qy
 
+var col='rgb('+(10*sd)+',255,'+(255-10*sd)+')'
+
+hbck.fillStyle = col
+hbck.strokeStyle = col
 
             hbck.beginPath();
             hbck.arc(qx, qy, 1, 0, 2 * Math.PI);
