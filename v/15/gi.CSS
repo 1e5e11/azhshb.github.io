@@ -1,0 +1,344 @@
+
+
+*::-webkit-scrollbar {
+    width: 14px;
+    height: 14px;
+    border-radius: 7px;
+}
+
+
+*::-webkit-scrollbar-track {
+    transition: 0.2s;
+    background-color: rgba(255, 255, 255, 0);
+    border-radius: 5px;
+}
+
+* ::-webkit-scrollbar-thumb:hover {
+    transition: 0.2s;
+    display: block;
+    border: 3.5px solid transparent;
+    background-color: var(--bjsdfz-a);
+}
+* ::-webkit-scrollbar-thumb {
+    transition: 0.2s;
+    display: block;
+    background: rgba(0,0,0,.5);
+    background-clip: padding-box;
+    border: 6px solid transparent;
+    border-radius: 14px;
+    
+    background-color: var(--bjsdfz-a);
+
+}
+* ::-webkit-scrollbar-button {
+
+    background-color: #eee;
+
+    display: none;
+
+}
+* ::-webkit-scrollbar-corner {
+
+    background-color: rgba(0, 0, 0, 0);
+
+}
+.zbx{
+
+    position:absolute;
+    width: 600px;
+    height: 800px;
+    left: 20px;
+    top: 100px;
+    box-shadow:0 0 30px var(--bjsdfz-a);
+    overflow: hidden;
+    border-radius: 20px;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+}
+#divdis{
+    transition: 0s;
+    position: absolute;
+    top:0px;
+    left: 0px;
+    width: 600px;
+    height: 800px;
+
+}
+
+.setting{
+    transition: 0.2s;
+    position: relative;
+    width: 100%;
+    height: 50px;
+    left:0px;
+    background-color: rgba(255, 255, 255, 0);
+}
+.setting:hover{
+    transition: 0.2s;
+    background-color: var(--bjsdfz-a);
+}
+#yzhou{
+transition: 0s;
+position: absolute;
+width: 2px;
+top: 0px;
+height: 100%;
+background-color: var(--bjsdfz);
+}
+#xzhou{
+transition: 0s;
+position: absolute;
+width: 100%;
+left: 0px;
+height: 2px;
+background-color: var(--bjsdfz);
+}
+#edafs{
+    position: absolute;
+width: 100%;
+left: 20px;
+top:10px;
+height: 80px;
+}
+.vfr{
+    position: absolute;
+    /*cursor: none;*/
+   
+}
+.vfr2{
+    position: absolute;top: 0px; bottom: 0px; margin: auto;left: 15px; height: 40px; width: 370px;line-height: 40px;
+}
+input { 
+
+    outline: none;
+    transition: 0.2s;
+    border-radius: 7px;
+    border-width: 1px;
+    border-color:var(--bjsdfz-a);
+    background-color: rgba(255, 255, 255, 0);
+    backdrop-filter: blur(0px);-webkit-backdrop-filter: blur(0px);
+    color: var(--wzys);
+    box-shadow: 0 0 3px var(--bjsdfz-a);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+}
+input:hover{
+    transition: 0.2s;
+    box-shadow: 0 0 15px var(--bjsdfz-a);
+}
+input:active{
+    transition: 0.2s;
+    box-shadow: 0 0 15px var(--bjsdfz);
+}
+input:focus{
+    transition: 0.2s;
+    box-shadow: 0 0 15px var(--bjsdfz);
+}
+.noneinp{
+position: absolute;
+border-bottom: none;
+outline: none;
+box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
+border: 0px;
+background-color: rgba(0, 0, 0, 0);
+border-radius: 0px;
+cursor: default;
+backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+}
+.noneinp:hover{
+    box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
+}
+.noneinp:focus{
+    box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
+    }
+    .noneinp:active{
+        box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
+        }
+input::-webkit-input-placeholder {
+    color: var(--wzys-a);
+}
+select{
+    color: var(--wzys);
+}
+option{
+    color: var(--bjsdfz);
+}
+.az{
+    position: absolute;
+width: 1000px;
+left: 10px;
+top:10px;
+height: 80px;
+color: var(--bjsdfz);
+font-size: 30;
+font-weight:bolder
+}
+.ltxx{
+    position: relative;
+    width: 400px;
+    height: 50px;
+}
+.name{
+    position: absolute;
+    left: 20px;
+    top:5px;
+    height: 32px;
+    width: 350px;
+    font-size: 10px;
+    line-height: 10px;
+    text-indent: 0px;
+}
+.xxzt{
+    position: absolute;
+    left: 20px;
+    top:20px;
+    height: 10px;
+    width: 350px;
+    font-size: 20px;
+    border: 1px solid var(--bjsdfz);
+    border-radius: 10px;
+    line-height: 30px;
+    text-indent: 10px;
+}
+.hxiangwg{
+    position: absolute;
+background-color: var(--bjsdfz-a);
+width: 100%;
+height: 1px;
+left: 0px;
+}
+.sxiangwg{
+    position: absolute;
+background-color: var(--bjsdfz-a);
+height:  100%;
+width: 1px;
+top: 0px;
+}
+.wanggexian{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top:0px;
+    left:0px;
+}
+.hcxda{
+    transition: 0.2s;
+    position: relative;
+    width: 300px;
+    height: 30px;
+    font-size: 20;
+text-align: left;
+line-height: 30px;
+text-indent:10px;
+background-color: rgba(0, 0, 0, 0);
+overflow: auto;
+font-size: 14;
+}
+.hcxda:hover{
+    transition: 0.2s;
+    
+}
+.hsscan{
+    position: absolute;
+    width: 40px;
+    height: 26px;
+    top:2px;
+    right:2px;
+    color: var(--bjsdfz);
+    font-size: 15;
+text-align: center;
+line-height: 26px;
+cursor: default;
+font-size: 10;
+}
+.red-kuang{
+
+    position: absolute;
+    box-shadow:0 0 30px var(--bjsdfz-a);
+    overflow: auto;
+    border-radius: 20px;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+}
+.red-kuang:hover{
+    transition: 0.2s;
+    box-shadow:0 0 30px var(--bjsdfz);
+}
+#fuck{
+    transition: 0.2s;
+    position: absolute;
+    margin: auto;
+    left: 0px;
+    right: 0px;
+    top:0px;
+    bottom: 0px;
+    width: 200px;
+    height: 50px;
+    border-radius: 40px;
+    border: 2px solid var(--bjsdfz);
+    text-align: center;
+    line-height: 50px;
+    color: var(--bjsdfz);
+    cursor: default;
+    font-size: 17;
+}
+#fuck:hover{
+    transition: 0.3s;
+    background-color: var(--bjsdfz);
+    color: white;
+}
+#fuck:active{
+    transition: 0.1s;
+    width: 190px;
+    height: 45px;
+    line-height: 45px;
+}
+#azcs{
+    transition: 0.2s;
+    position: absolute;
+    margin: auto;
+    left: 0px;
+    right: 0px;
+    top:75px;
+    width: 200px;
+    height: 25px;
+    text-align: center;
+    line-height: 25px;
+    color: var(--bjsdfz);
+    font-size: 10;
+}
+#xnsb{
+    transition: 0.1s;
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 0px 10px 10px 10px;
+    border: 3.3px solid var(--bjsdfz);
+    background-color: rgba(0, 0, 0, 0);
+    z-index: 114514;
+    user-select:none;
+    
+}
+#xnsb:active{
+    background-color: var(--bjsdfz);
+}
+.wzpzdiv{
+    transition: 0s;
+    position: absolute;
+    border: 1px solid var(--bjsdfz);
+    overflow: auto;
+    border-radius: 10px;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    left: 0px;
+    background-color: rgba(0, 0, 0, 0);
+    text-align: left;
+    text-indent: 10px;
+    padding: 0px 0px;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+}
+
+
