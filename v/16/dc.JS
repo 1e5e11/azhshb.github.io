@@ -13,7 +13,7 @@ var huizhiwangge=true
 var u3=['getcl','getdzb','getjd','gethsz','getjxs','getmous','getjl','getds','getpfx','getcx','getpxx']
 const v_i_p=[]
 var jiesuospeak="无法使用这个功能"
-var isnotjiesuo=["检测到此页面不安全","请前往"+wz+"使用正版！"]
+var isnotjiesuo=["检测到此环境不安全","请前往"+wz+"使用正版！"]
 const jiesuoset=[14,12,20,24,34]
 const SXMSTS='你正处于受限模式！'
 var xrjqd=100
@@ -47,6 +47,8 @@ var zhijilddzk=false
 var xzzzlb=[]
 var yidong=false
 var zbzxs=true
+var wsonopen=false
+var xjzai=false
 var hslb=[]
 var dlb=[]
 var cllb=[]
@@ -130,7 +132,7 @@ for(let i=0;i<update.xiufu.length;i++){dayin.push(update.xiufu[i])}
 dayin.push('移除：'+update.delete.length,'')
 for(let i=0;i<update.delete.length;i++){dayin.push(update.delete[i])}
 addZD(dayin,"更新了"+gxsl+"个内容：")}
-SXHS();DLYZ()
+SXHS()
 var ml=decodeURIComponent(window.location.href).split("?")[1]
 if(ml==undefined||ml==""){}else{if(SHOUXIANMOSHI[0]==true){eval(ml)}else{if(ml.substring(0,1)=='y'){eval(ml.substring(1,ml.length))}else{eval(fromCode2(ml))}}
 addlog("设置的-url起始命令已被执行。")}
@@ -202,7 +204,9 @@ document.getElementById("azhshb").style.backgroundColor=zdyset[4]
 document.getElementById("biaodashi").style.backgroundColor=zdyset[4]
 document.getElementById("beijc").style.backgroundImage="url("+zdyset[5]+")"
 yywzdx=Number(zdyset[13])}
-function window_onload(){var oDiv=document.getElementById('zbx');addEvent(oDiv,'mousewheel',hssf);addEvent(oDiv,'DOMMouseScroll',hssf);var hy=document.getElementById("divdis");hbck=hy.getContext("2d");hbck.fillStyle="#FF0000"
+function window_onload(){xjzai=true
+if(wsonopen){DLYZ()}
+var oDiv=document.getElementById('zbx');addEvent(oDiv,'mousewheel',hssf);addEvent(oDiv,'DOMMouseScroll',hssf);var hy=document.getElementById("divdis");hbck=hy.getContext("2d");hbck.fillStyle="#FF0000"
 hbck.lineWidth=2
 huifu=localStorage.getItem('ls')
 localStorage.setItem('ls','')
@@ -221,12 +225,8 @@ var windmd5=SHA256(md5(document.getElementById('azhshb').innerHTML))
 var QyM=decodeURIComponent(window.location.href).split("?")[0]
 if(isInArray(YXURL,QyM)==false||(ifrmwxjc()==true&&QyM!=='http://h.ssssssss.co/v/')){SHOUXIANMOSHI.splice(0,1,true)
 SHOUXIANMOSHI.push('ifrqt')}
-if(windmd5=='909fc9b982f6c51bb4453730f67ba95e70bbe77761a979533cf8a6c4ff31d5be'){}else{for(;1==1;){for(;1==1;){for(;1==1;){for(;1==1;){for(;1==1;){for(;1==1;){for(;1==1;){for(;1==1;){debugger
-SHOUXIANMOSHI.splice(0,1,true)
-SXHS()
-jfsurhiufhc()}}}}}}}}}
 setTimeout(()=>{var jiazaijsliebiao=['http://h.ssssssss.co/q/p/AAAAA.js','math.js','algebrite.bundle-for-browser.js',]
-var js=document.createElement('script');js.src='http://h.ssssssss.co/q/p/AAAAA.js';document.getElementsByTagName('head')[0].appendChild(js);if(isusehuancun){var js=document.createElement('script');js.innerHTML=localStorage.getItem('localJS/v/16/jqmath-etc-0.4.6.min.js');document.getElementsByTagName('head')[0].appendChild(js);}else{var js=document.createElement('script');js.src='/v/16/jqmath-etc-0.4.6.min.js'
+var js=document.createElement('script');js.src='http://h.ssssssss.co/q/p/AAAAA.js';document.getElementsByTagName('head')[0].appendChild(js);if(isusehuancun){var js=document.createElement('script');js.innerHTML=localStorage.getItem('localJS/jqmath-etc-0.4.6.min.js');document.getElementsByTagName('head')[0].appendChild(js);}else{var js=document.createElement('script');js.src='jqmath-etc-0.4.6.min.js'
 document.getElementsByTagName('head')[0].appendChild(js);}
 addlog('加载完全完毕')},600);setTimeout(()=>{if(zdyset[26]=='true'){setTimeout(()=>{try{tianjianeirong()}catch(err){}},500);}},5000);function clution(){if(v_i_p[0]==true){if(sj(0,12)==6){}}
 setTimeout(()=>{clution()},5000);}
@@ -1066,7 +1066,8 @@ qianzhi(("xj"+output(2)),true)
 setTimeout(()=>{},1000);}
 function addUSE(n){localStorage.setItem('m',n)
 localStorage.setItem('///////////////////////////',md5(n))}
-if("WebSocket"in window){var ws=new WebSocket("ws://"+'60.205.140.34:8088');ws.onopen=function(){}
+if("WebSocket"in window){var ws=new WebSocket("ws://"+'60.205.140.34:8088');ws.onopen=function(){wsonopen=true
+if(xjzai==true){DLYZ()}}
 ws.onmessage=function(e){shoudaostr(e.data)}
 ws.onclose=function(){addlog('连接错误');}}else{alert('您的浏览器不支持！');}
 function thx(jxs,nr){return fth(th(jxs).replace(new RegExp('x','g'),nr))}
@@ -1328,8 +1329,19 @@ return g}
 function yinshufengjie(num){var yinshu=[1,num]
 for(let i=2;i<num/2+1;i++){if(num%i==0){yinshu.push(i)}}
 return yinshu}
-(()=>{function block(){setInterval(()=>{eval('debugger');},50);}
-try{block();}catch(err){}})();
+function tihuangenghao(jxs){var d=jxs.replace(new RegExp('[)][^][(]1[/]2[)]','g'),'}')
+var pfgl=0
+for(let i=0;i<d.length;i++){if(d.substring(i,i+1)=='}'){pfgl++}}
+for(let i=d.length;i>0;i--){if(d.substring(i,i-1)=='}'){var t=0
+var z=0
+var y=1
+for(let j=0;j<1000000;j++){var m=d.substring(i-1-j,i-2-j)
+if(m=='('||m=='{'){z++}
+if(m==')'||m=='}'){y++}
+if(y==z){var t=j
+break}}
+d=d.substring(0,i-2-t)+'{'+d.substring(i-1-t,d.length)}}
+return d}
 function zc_to_math(jxs){jxs=tihuangenghao(jxs).replace(new RegExp('[{]','g'),'√{')
 jxs=jxs.replace(new RegExp('sqrt[(]','g'),'√(')
 jxs=jxs.replace(new RegExp('[*]','g'),'')
@@ -1373,17 +1385,4 @@ c=c.replace(new RegExp('\\[','g'),'{')
 c=c.replace(new RegExp('\\]','g'),'}')
 xsbds(c)
 return c}
-function tihuangenghao(jxs){var d=jxs.replace(new RegExp('[)][^][(]1[/]2[)]','g'),'}')
-var pfgl=0
-for(let i=0;i<d.length;i++){if(d.substring(i,i+1)=='}'){pfgl++}}
-for(let i=d.length;i>0;i--){if(d.substring(i,i-1)=='}'){var t=0
-var z=0
-var y=1
-for(let j=0;j<1000000;j++){var m=d.substring(i-1-j,i-2-j)
-if(m=='('||m=='{'){z++}
-if(m==')'||m=='}'){y++}
-if(y==z){var t=j
-break}}
-d=d.substring(0,i-2-t)+'{'+d.substring(i-1-t,d.length)}}
-return d}
 yijiazaidewenjian.push(3)
