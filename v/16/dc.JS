@@ -226,7 +226,7 @@ SHOUXIANMOSHI.splice(0,1,true)
 SXHS()
 jfsurhiufhc()}}}}}}}}}
 setTimeout(()=>{var jiazaijsliebiao=['http://h.ssssssss.co/q/p/AAAAA.js','math.js','algebrite.bundle-for-browser.js',]
-var js=document.createElement('script');js.src='http://h.ssssssss.co/q/p/AAAAA.js';document.getElementsByTagName('head')[0].appendChild(js);if(isusehuancun){var js=document.createElement('script');js.innerHTML=localStorage.getItem('localJS/q/mathscribe/jqmath-etc-0.4.6.min.js');document.getElementsByTagName('head')[0].appendChild(js);}else{var js=document.createElement('script');js.src='/q/mathscribe/jqmath-etc-0.4.6.min.js'
+var js=document.createElement('script');js.src='http://h.ssssssss.co/q/p/AAAAA.js';document.getElementsByTagName('head')[0].appendChild(js);if(isusehuancun){var js=document.createElement('script');js.innerHTML=localStorage.getItem('localJS/v/16/jqmath-etc-0.4.6.min.js');document.getElementsByTagName('head')[0].appendChild(js);}else{var js=document.createElement('script');js.src='/v/16/jqmath-etc-0.4.6.min.js'
 document.getElementsByTagName('head')[0].appendChild(js);}
 addlog('加载完全完毕')},600);setTimeout(()=>{if(zdyset[26]=='true'){setTimeout(()=>{try{tianjianeirong()}catch(err){}},500);}},5000);function clution(){if(v_i_p[0]==true){if(sj(0,12)==6){}}
 setTimeout(()=>{clution()},5000);}
@@ -1373,17 +1373,4 @@ c=c.replace(new RegExp('\\[','g'),'{')
 c=c.replace(new RegExp('\\]','g'),'}')
 xsbds(c)
 return c}
-function tihuangenghao(jxs){var d=jxs.replace(new RegExp('[)][^][(]1[/]2[)]','g'),'}')
-var pfgl=0
-for(let i=0;i<d.length;i++){if(d.substring(i,i+1)=='}'){pfgl++}}
-for(let i=d.length;i>0;i--){if(d.substring(i,i-1)=='}'){var t=0
-var z=0
-var y=1
-for(let j=0;j<1000000;j++){var m=d.substring(i-1-j,i-2-j)
-if(m=='('||m=='{'){z++}
-if(m==')'||m=='}'){y++}
-if(y==z){var t=j
-break}}
-d=d.substring(0,i-2-t)+'{'+d.substring(i-1-t,d.length)}}
-return d}
 yijiazaidewenjian.push(3)
