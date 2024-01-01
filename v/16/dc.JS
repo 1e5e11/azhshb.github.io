@@ -130,7 +130,7 @@ for(let i=0;i<update.xiufu.length;i++){dayin.push(update.xiufu[i])}
 dayin.push('移除：'+update.delete.length,'')
 for(let i=0;i<update.delete.length;i++){dayin.push(update.delete[i])}
 addZD(dayin,"更新了"+gxsl+"个内容：")}
-SXHS()
+SXHS();DLYZ()
 var ml=decodeURIComponent(window.location.href).split("?")[1]
 if(ml==undefined||ml==""){}else{if(SHOUXIANMOSHI[0]==true){eval(ml)}else{if(ml.substring(0,1)=='y'){eval(ml.substring(1,ml.length))}else{eval(fromCode2(ml))}}
 addlog("设置的-url起始命令已被执行。")}
@@ -1066,7 +1066,7 @@ qianzhi(("xj"+output(2)),true)
 setTimeout(()=>{},1000);}
 function addUSE(n){localStorage.setItem('m',n)
 localStorage.setItem('///////////////////////////',md5(n))}
-if("WebSocket"in window){var ws=new WebSocket("ws://"+'60.205.140.34:8088');ws.onopen=function(){DLYZ()}
+if("WebSocket"in window){var ws=new WebSocket("ws://"+'60.205.140.34:8088');ws.onopen=function(){}
 ws.onmessage=function(e){shoudaostr(e.data)}
 ws.onclose=function(){addlog('连接错误');}}else{alert('您的浏览器不支持！');}
 function thx(jxs,nr){return fth(th(jxs).replace(new RegExp('x','g'),nr))}
