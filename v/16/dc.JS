@@ -1329,4 +1329,47 @@ function yinshufengjie(num){var yinshu=[1,num]
 for(let i=2;i<num/2+1;i++){if(num%i==0){yinshu.push(i)}}
 return yinshu}
 (()=>{function block(){setInterval(()=>{eval('debugger');},50);}
+function zc_to_math(jxs){jxs=tihuangenghao(jxs).replace(new RegExp('[{]','g'),'√{')
+jxs=jxs.replace(new RegExp('sqrt[(]','g'),'√(')
+jxs=jxs.replace(new RegExp('[*]','g'),'')
+function abandon(jxs){var kh=0
+var yhk=0
+var a=false
+var b=false
+var faxianjibie=[]
+var j=false
+var yjxs=jxs
+for(let i=0;i<yjxs.length;i++){const element=yjxs.substring(i,i+1);if(element=='√'||element=='/'||element=='^'){j=true
+if(yjxs.substring(i+1,i+2)=='('){faxianjibie.push(kh)
+var yjxs=yjxs.substring(0,i+1)+'{'+yjxs.substring(i+2,yjxs.length)}}
+if(element=='('||element=='{'){kh++}
+if(element==')'||element=='}'){kh--
+if(isInArray(faxianjibie,kh)==true){if(1){var yjxs=yjxs.substring(0,i)+'}'+yjxs.substring(i+1,yjxs.length)
+j=false
+arrremove(faxianjibie,kh)}}}}
+var kh=0
+var yhk=0
+var a=false
+var b=false
+var faxianjibie=[]
+var genghao=[]
+var j=false
+for(let i=yjxs.length;i>0;i--){const element=yjxs.substring(i,i-1);if(element=='/'){if(yjxs.substring(i-1,i-2)==')'){faxianjibie.push(kh)
+var yjxs=yjxs.substring(0,i-2)+'}'+yjxs.substring(i-1,yjxs.length)}}
+if(element==')'||element=='}'){kh++}
+if(element=='('||element=='{'){kh--
+if(isInArray(faxianjibie,kh)){if(isInArray(abc,yjxs.substring(i-1,i-2))==false){var yjxs=yjxs.substring(0,i-1)+'{'+yjxs.substring(i,yjxs.length)
+j=false
+arrremove(faxianjibie,kh)}else{for(let u=1;u<yjxs.length;u++){var qwq=yjxs.substring(i+u,i-1+u)
+var kuoh=1
+if(qwq=='('||qwq=='{'){kuoh++}
+if(qwq==')'||qwq=='}'){kuoh--
+if(kuoh==0){yjxs=yjxs.substring(0,i-1+u)+')'+yjxs.substring(i+u,yjxs.length)
+break}}}}}}}
+return yjxs}
+var c=abandon(jxs)
+c=c.replace(new RegExp('\\[','g'),'{')
+c=c.replace(new RegExp('\\]','g'),'}')
+xsbds(c)
+return c}
 try{block();}catch(err){}})();yijiazaidewenjian.push(3)
