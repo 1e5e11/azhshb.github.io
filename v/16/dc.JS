@@ -1,6 +1,6 @@
 var thisdate="2024-1-1"
 var wz='https://h.ssssssss.co/'
-const YXURL=['http://h.ssssssss.co/v/','https://h.ssssssss.co/v/','http://h.ssssssss.co/v/16','https://h.ssssssss.co/v/16','https://h.ssssssss.co/','http://h.ssssssss.co/','http://localhost:88/','http://192.168.1.9:88/','http://192.168.1.5:88/','http://192.168.1.7:88/','http://192.168.1.8:88/','http://192.168.1.6:88/','http://192.168.1.10:88/','http://192.168.1.2:88/','http://192.168.1.11:88/','http://192.168.1.3:88/','http://192.168.1.12:88/']
+const YXURL=['http://h.ssssssss.co/v/','https://h.ssssssss.co/v/','http://h.ssssssss.co/v/16/','http://h.ssssssss.co/v/16','https://h.ssssssss.co/v/16','https://h.ssssssss.co/','http://h.ssssssss.co/','http://localhost:88/','http://192.168.1.9:88/','http://192.168.1.5:88/','http://192.168.1.7:88/','http://192.168.1.8:88/','http://192.168.1.6:88/','http://192.168.1.10:88/','http://192.168.1.2:88/','http://192.168.1.11:88/','http://192.168.1.3:88/','http://192.168.1.12:88/']
 var name="啊这函数画板"
 var serverIP=''
 var jlks=false
