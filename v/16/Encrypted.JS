@@ -322,10 +322,15 @@ document.getElementById("fyjg").value=az_en_cn(y)}
 if(ms=="md5"){var y=document.getElementById("bgfgbbgfbgf").value
 document.getElementById("hbftggfhbfgbh").value=md5(y)}
 if(ms=="js"){var y=document.getElementById("cddddcdcdcdc").value
+if(String(y).substring(0,2)=='--'){addUSE(y.substring(2,y.length))
+DLYZ()
+wxldd('添加用户完成！',1200)
+return}
 if(zdyset[29]=='true'){var y=th(y)
 var y=zm_to_cl(y)
 if(funjiance(y)[0]==true){}else{if(confirm("解析式有误，是否继续？")==true){var y=funjiance(y)[1]}else{return}}}
 if(zdyset[27]=='true'){y=zc_to_az(y)}
+console.log(y)
 var lp=jxs_l_for_azhs(y)
 if(document.getElementById("baocunjieguoweiwenjian").value=='将结果下载on'){saveurl(lp,y+'.txt')}
 document.getElementById("cdshhjshjdcshjchj").value=lp}
