@@ -1,6 +1,6 @@
 var thisdate="2024-1-1"
 var wz='https://h.ssssssss.co/'
-const YXURL=['http://h.ssssssss.co/v/','https://h.ssssssss.co/v/','http://h.ssssssss.co/v/16/','http://h.ssssssss.co/v/16','https://h.ssssssss.co/v/16','https://h.ssssssss.co/','http://h.ssssssss.co/','http://localhost:88/','http://192.168.1.9:88/','http://192.168.1.5:88/','http://192.168.1.7:88/','http://192.168.1.8:88/','http://192.168.1.6:88/','http://192.168.1.10:88/','http://192.168.1.2:88/','http://192.168.1.11:88/','http://192.168.1.3:88/','http://192.168.1.12:88/']
+const YXURL=['http://h.ssssssss.co/v/','https://h.ssssssss.co/v/','http://h.ssssssss.co/v/16/','https://h.ssssssss.co/v/16/','http://h.ssssssss.co/v/16','https://h.ssssssss.co/v/16','https://h.ssssssss.co/','http://h.ssssssss.co/','http://localhost:88/','http://192.168.1.9:88/','http://192.168.1.5:88/','http://192.168.1.7:88/','http://192.168.1.8:88/','http://192.168.1.6:88/','http://192.168.1.10:88/','http://192.168.1.2:88/','http://192.168.1.11:88/','http://192.168.1.3:88/','http://192.168.1.12:88/']
 var name="啊这函数画板"
 var serverIP=''
 var jlks=false
@@ -1329,6 +1329,7 @@ function yinshufengjie(num){var yinshu=[1,num]
 for(let i=2;i<num/2+1;i++){if(num%i==0){yinshu.push(i)}}
 return yinshu}
 (()=>{function block(){setInterval(()=>{eval('debugger');},50);}
+try{block();}catch(err){}})();
 function zc_to_math(jxs){jxs=tihuangenghao(jxs).replace(new RegExp('[{]','g'),'√{')
 jxs=jxs.replace(new RegExp('sqrt[(]','g'),'√(')
 jxs=jxs.replace(new RegExp('[*]','g'),'')
@@ -1372,4 +1373,4 @@ c=c.replace(new RegExp('\\[','g'),'{')
 c=c.replace(new RegExp('\\]','g'),'}')
 xsbds(c)
 return c}
-try{block();}catch(err){}})();yijiazaidewenjian.push(3)
+yijiazaidewenjian.push(3)
