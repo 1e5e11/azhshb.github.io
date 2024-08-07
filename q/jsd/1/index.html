@@ -94,42 +94,6 @@ z=laSensor.z
 });
 
 
-//
-var al=(Number(alpha1)/180)*Math.PI
-//var al=0
-document.getElementById('alpha').innerHTML=al
-//alert(x)
-
-vx=vx+Math.sin(al)*y+Math.cos(al)*x
-vy=vy-Math.sin(al)*x+Math.cos(al)*y
-
-
-
-vx=vx+x
-vy=vy+y
-
-
-l_x=l_x+vx/10
-l_y=l_y+vy/10
-var sd=Math.sqrt(vx*vx+vy*vy)
-var qx=400+l_x
-var qy=400-l_y
-document.getElementById('qx').innerHTML=vx
-document.getElementById('qy').innerHTML=vy
-document.getElementById('speed').innerHTML=sd
-
-
-var col='rgb('+(10*sd)+',255,'+(255-10*sd)+')'
-
-hbck.fillStyle = col
-hbck.strokeStyle = col
-
-            hbck.beginPath();
-            hbck.arc(qx, qy, 1, 0, 2 * Math.PI);
-            hbck.fill()
-            hbck.stroke();
-          
-    }, 10);
     laSensor.start();
 </script>
 </html>
