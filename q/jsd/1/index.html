@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<style>
+    .cav{
+      position: fixed;
+      top: 0%;
+      left: 0%;
+      width: 800px;
+      height: 800px;
+      background-color: rgba(0, 0, 0, 0.45);
+    }
+</style>
+</head>
+<body>
+<input type="button" value="Start" onclick="start()"/>
+<input type="button" value="End" onclick="downloadText('1.txt',j)"/>
+</body>
+<script type="text/javascript">
+
+    var l_x=0
+    var l_y=0
+    var l_z=0
+    var vx=0,vy=0
+    var x=0,y=0,z=0
+    var qx=400,qy=400,qz=0
+    var alpha1=0,beta=0,gamma=0;
+    //var a=0
+    window.addEventListener('devicepressure', function (event) {
+//alert('az')
+ 
+        }, false);
+    if (window.DeviceOrientationEvent) {
+        window.addEventListener('deviceorientation', function (event) {
+              
+
+
+
+                alpha1 = event.alpha,
+                beta = event.beta,
+                gamma = event.gamma;
+ 
+        }, false);
+    } else {
+        document.querySelector('body').innerHTML = '你的浏览器不支持陀螺仪';
+    }
+
+var j=''
+
+
+
+var starttime=0
+function start() {
+    starttime=new Date().getTime()
+
+setInterval(() => {
+    var t=new Date().getTime()-starttime
+    var json={
+        time:t,
+        x:x,
+        y:y,
+        z:z,
+        a:alpha,
+        b:beta,
+        g:gamma
+    }
+    const jsonStr = (json instanceof Object) ? JSON.stringify(json) : json;
+j=j+jsonStr+','
+}, 1);
+
+}
+
+function downloadText(fileName, text) {
+    const url = window.URL || window.webkitURL || window;
+    const blob = new Blob([text]);
+    const saveLink = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+    saveLink.href = url.createObjectURL(blob);
+    // 设置 download 属性
+    saveLink.download = fileName;
+    saveLink.click();
+}
+
+
+
+
+    let laSensor = new LinearAccelerationSensor({ frequency: 100 });
+
+laSensor.addEventListener("reading", (e) => {
+x=laSensor.x
+y=laSensor.y
+z=laSensor.z
+
+});
+
+ 
+//alert(Math.PI)
+    setInterval(() => {
+//
+var al=(Number(alpha1)/180)*Math.PI
+//var al=0
+document.getElementById('alpha').innerHTML=al
+//alert(x)
+
+vx=vx+Math.sin(al)*y+Math.cos(al)*x
+vy=vy-Math.sin(al)*x+Math.cos(al)*y
+
+
+
+vx=vx+x
+vy=vy+y
+
+
+l_x=l_x+vx/10
+l_y=l_y+vy/10
+var sd=Math.sqrt(vx*vx+vy*vy)
+var qx=400+l_x
+var qy=400-l_y
+document.getElementById('qx').innerHTML=vx
+document.getElementById('qy').innerHTML=vy
+document.getElementById('speed').innerHTML=sd
+
+
+var col='rgb('+(10*sd)+',255,'+(255-10*sd)+')'
+
+hbck.fillStyle = col
+hbck.strokeStyle = col
+
+            hbck.beginPath();
+            hbck.arc(qx, qy, 1, 0, 2 * Math.PI);
+            hbck.fill()
+            hbck.stroke();
+          
+    }, 10);
+    laSensor.start();
+</script>
+</html>
