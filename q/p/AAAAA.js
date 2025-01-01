@@ -7,7 +7,7 @@ var beijinliebiao=[
     ['qiutian3.5.png','120','200'],
     ['wanshengjie2.1.png','300','150'],
     ['muxing1.1.png','150','150'],
-    ['donglong1.2.png','150','300']
+    ['denglong1.2.png','150','300']
 ]
 function grdthjfyjtgjitgyj(name,k,g){
 var f=document.getElementById('elseXS').innerHTML
