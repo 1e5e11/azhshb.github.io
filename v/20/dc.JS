@@ -537,6 +537,7 @@ var language_en = [
 	'subset',
 	'Replace the main element with:',
 	'Page Scaling',
+	'Benchmark',
 	'Benchmark running, please wait…',
 	'Score: '
 ]
@@ -3772,18 +3773,11 @@ function TBxx() {
 	} else {
 		var y = []
 	}
-    y.push(o2);
-    // Bound synchronous history writes to ~2 MiB (UTF-16), retaining the latest state.
-    var total = y.reduce(function (n, item) { return n + item.length + 1; }, 0);
-    while (y.length > 1 && (y.length > 100 || total > 1024 * 1024)) total -= y.shift().length + 1;
-    try {
-        localStorage.setItem('ls', sz_to_zfc(y));
-    } catch (error) {
-        // Quota failures must not interrupt pointer cleanup or discard the visible board.
-        try { localStorage.setItem('ls', sz_to_zfc([o2])); }
-        catch (storageError) { tip('本地存储空间不足，请导出画板保存'); }
-    }
-
+	if (y.length > 100) {
+		y.shift()
+	}
+	y.push(o2)
+	localStorage.setItem('ls', sz_to_zfc(y))
 	if (hsxz == false) {
 		return
 	} else {
@@ -5408,44 +5402,589 @@ if ('Barometer' in window) {
 
 
 
-function Benchmark() {
-	/* 跑分：随机生成 10000 条算式并求值，衡量本机计算性能。
-	   得分 = 10000000 / 耗时(ms)，越高越快。不会改动画板内容。 */
-	function random_calulation(u) {
-		var f = ''
-		function random_signal() {
-			var a = sj(0, 3)
-			if (a == 0) {
-				return '+'
-			}
-			if (a == 1) {
-				return '_'
-			}
-			if (a == 2) {
-				return '*'
-			}
-			if (a == 3) {
-				return '/'
-			}
-
-		}
-		for (let i = 0; i < u; i++) {
-			f = f + (Math.random() + 1) + random_signal()
-		}
-		f = f + '1'
-		return jxs_l_for_azhs(f)
+var benchmarkState = {
+	running: false,
+	storageKey: 'azhshb_benchmark_history_v3',
+	maxHistory: 30,
+	/* 每项基准值对应 1000 分；综合分使用加权几何平均，避免单项掩盖短板。 */
+	baseline: {
+		calculation: 8000000,
+		expression: 45000,
+		drawing: 2000000,
+		storage: 100000
 	}
+}
+
+function benchmarkI18n() {
+	var english = typeof zdyset != 'undefined' && zdyset[36] == 'en'
+	return english ? {
+		title: 'Performance benchmark',
+		subtitle: 'Calculation, expression, Canvas and browser storage performance test',
+		overall: 'Overall score',
+		idle: 'Not benchmarked yet',
+		ready: 'Last result loaded',
+		preparing: 'Preparing…',
+		calculation: 'Numeric calculation',
+		expression: 'Expression parsing',
+		drawing: 'Canvas drawing',
+		storage: 'Browser storage',
+		testingCalculation: 'Testing numeric calculation…',
+		testingExpression: 'Testing expression parsing…',
+		testingDrawing: 'Testing Canvas drawing…',
+		testingStorage: 'Testing localStorage reads and writes…',
+		finishing: 'Calculating and saving score…',
+		complete: 'Completed in {time} s · saved locally',
+		failed: 'Benchmark failed: ',
+		history: 'Score history',
+		localOnly: 'Results are stored on this device only',
+		noHistory: 'No benchmark history',
+		runs: '{count} saved runs · latest {date}',
+		start: 'Start benchmark',
+		again: 'Run again',
+		export: 'Export results',
+		clear: 'Clear history',
+		confirmClear: 'Clear all locally saved benchmark results?',
+		cleared: 'Benchmark history cleared',
+		nothingToExport: 'There are no benchmark results to export.',
+		exported: 'Benchmark results exported',
+		note: 'Baseline score is 1000; keep this page in the foreground while running.',
+		millionPerSecond: '{value}M iterations/s',
+		perSecond: '{value} evals/s',
+		tenThousandPerSecond: '{value}0K segments/s',
+		storagePerSecond: 'R {read}K / W {write}K ops/s',
+		scoreSuffix: ' pts'
+	} : {
+		title: '性能跑分',
+		subtitle: '综合测试计算、表达式、Canvas 与浏览器存储性能',
+		overall: '综合得分',
+		idle: '尚未跑分',
+		ready: '已载入最近一次结果',
+		preparing: '正在准备…',
+		calculation: '数值计算',
+		expression: '表达式解析',
+		drawing: 'Canvas 绘制',
+		storage: '浏览器存储',
+		testingCalculation: '正在测试数值计算…',
+		testingExpression: '正在测试表达式解析…',
+		testingDrawing: '正在测试 Canvas 绘制…',
+		testingStorage: '正在测试 localStorage 读写…',
+		finishing: '正在计算并保存得分…',
+		complete: '用时 {time} 秒 · 结果已保存到本机',
+		failed: '跑分失败：',
+		history: '得分历史趋势',
+		localOnly: '结果仅存储在本机',
+		noHistory: '暂无跑分历史',
+		runs: '已保存 {count} 次 · 最近 {date}',
+		start: '开始跑分',
+		again: '再次跑分',
+		export: '导出结果',
+		clear: '清空历史',
+		confirmClear: '确定清空保存在本机的全部跑分结果？',
+		cleared: '跑分历史已清空',
+		nothingToExport: '暂无可导出的跑分结果。',
+		exported: '跑分结果已导出',
+		note: '基准得分为 1000；跑分时请保持当前页面在前台。',
+		millionPerSecond: '{value} 百万次/秒',
+		perSecond: '{value} 次/秒',
+		tenThousandPerSecond: '{value} 万线段/秒',
+		storagePerSecond: '读 {read}K / 写 {write}K 次/秒',
+		scoreSuffix: ' 分'
+	}
+}
+
+function benchmarkFormat(text, values) {
+	return String(text).replace(/\{(\w+)\}/g, function (_, key) {
+		return values[key] == undefined ? '' : values[key]
+	})
+}
+
+function benchmarkNow() {
+	return window.performance && performance.now ? performance.now() : new Date().getTime()
+}
+
+function benchmarkNextPaint() {
+	return new Promise(function (resolve) {
+		var next = window.requestAnimationFrame || function (callback) { return setTimeout(callback, 16) }
+		next(function () { setTimeout(resolve, 0) })
+	})
+}
+
+function readBenchmarkHistory() {
+	try {
+		var history = JSON.parse(localStorage.getItem(benchmarkState.storageKey) || '[]')
+		if (!Array.isArray(history)) return []
+		return history.filter(function (item) {
+			return item && isFinite(Number(item.score)) && item.createdAt
+		}).slice(-benchmarkState.maxHistory)
+	} catch (error) {
+		console.warn('无法读取跑分历史:', error)
+		return []
+	}
+}
+
+function saveBenchmarkResult(result) {
+	var history = readBenchmarkHistory()
+	history.push(result)
+	history = history.slice(-benchmarkState.maxHistory)
+	try {
+		localStorage.setItem(benchmarkState.storageKey, JSON.stringify(history))
+	} catch (error) {
+		console.warn('无法保存跑分历史:', error)
+		throw error
+	}
+	return history
+}
+
+function setBenchmarkProgress(percent, status) {
+	var bar = document.getElementById('benchmark-progress-bar')
+	var statusElement = document.getElementById('benchmark-status')
+	if (bar) bar.style.width = Math.max(0, Math.min(100, percent)) + '%'
+	if (statusElement && status) statusElement.innerHTML = status
+}
+
+function benchmarkMeasure(batch, minimumDuration) {
+	var started = benchmarkNow()
+	var elapsed = 0
+	var units = 0
+	var checksum = 0
+	do {
+		var batchResult = batch()
+		units += batchResult.units
+		checksum += Number(batchResult.checksum) || 0
+		elapsed = benchmarkNow() - started
+	} while (elapsed < minimumDuration)
+	return {
+		rate: units / (elapsed / 1000),
+		durationMs: elapsed,
+		units: units,
+		checksum: checksum
+	}
+}
+
+function benchmarkCalculationStage() {
+	var seed = 1.23456789
+	return benchmarkMeasure(function () {
+		var value = seed
+		for (var i = 0; i < 10000; i++) {
+			value = (value * 1.000000119 + i % 97) / 1.000003
+			value = Math.sqrt(Math.abs(value)) + Math.sin(value) * .25 + .5
+		}
+		seed = value
+		return { units: 10000, checksum: value }
+	}, 360)
+}
+
+function benchmarkExpressionStage() {
+	var expressions = [
+		'((1.25+2.5)*3.75)/(4.5+1)',
+		'(3.5^2+4.5^2)^(1/2)',
+		'(12.75/3.4)+(8.2*1.6)-2.1',
+		'((9.1+3.7)/(2.2+1.3))^2',
+		'(1.2+2.3+3.4+4.5)/(5.6+0.7)',
+		'((7.25*8.5)-(3.75*2.1))/4.2'
+	]
+	var index = 0
+	var evaluator = typeof z_jxs_l_for_azhs == 'function' ? z_jxs_l_for_azhs : jxs_l_for_azhs
+	return benchmarkMeasure(function () {
+		var checksum = 0
+		for (var i = 0; i < 20; i++) {
+			checksum += Number(evaluator(expressions[index++ % expressions.length])) || 0
+		}
+		return { units: 20, checksum: checksum }
+	}, 360)
+}
+
+function benchmarkDrawingStage() {
+	var canvas = document.getElementById('benchmark-draw-surface')
+	var context = canvas && canvas.getContext ? canvas.getContext('2d') : null
+	if (!context) throw new Error('Canvas 2D is unavailable')
+	var phase = 0
+	context.clearRect(0, 0, canvas.width, canvas.height)
+	context.lineWidth = 1
+	context.strokeStyle = '#7c0a21'
+	return benchmarkMeasure(function () {
+		context.beginPath()
+		for (var i = 0; i < 2000; i++) {
+			var x = (i * 13 + phase) % canvas.width
+			var y = canvas.height / 2 + Math.sin((i + phase) * .035) * canvas.height * .42
+			if (i % 40 == 0) context.moveTo(x, y)
+			else context.lineTo(x, y)
+		}
+		context.stroke()
+		phase = (phase + 17) % canvas.width
+		return { units: 2000, checksum: phase }
+	}, 360)
+}
+
+function benchmarkStorageStage() {
+	/* 使用唯一临时键，避免覆盖应用或用户已有的 localStorage 数据。 */
+	var key = '__azhshb_benchmark_probe_' + new Date().getTime() + '_' + Math.random().toString(36).slice(2)
+	var payloadBase = new Array(1025).join('a')
+	var writeResult
+	var readResult
+	try {
+		writeResult = benchmarkMeasure(function () {
+			var checksum = 0
+			for (var i = 0; i < 50; i++) {
+				var payload = payloadBase + String(i)
+				localStorage.setItem(key, payload)
+				checksum += payload.length
+			}
+			return { units: 50, checksum: checksum }
+		}, 260)
+
+		readResult = benchmarkMeasure(function () {
+			var checksum = 0
+			for (var i = 0; i < 100; i++) {
+				var value = localStorage.getItem(key)
+				checksum += value ? value.length : 0
+			}
+			return { units: 100, checksum: checksum }
+		}, 260)
+	} finally {
+		try { localStorage.removeItem(key) } catch (cleanupError) {
+			console.warn('无法清理跑分临时存储:', cleanupError)
+		}
+	}
+	return {
+		rate: Math.sqrt(writeResult.rate * readResult.rate),
+		readRate: readResult.rate,
+		writeRate: writeResult.rate,
+		durationMs: writeResult.durationMs + readResult.durationMs,
+		units: writeResult.units + readResult.units,
+		checksum: writeResult.checksum + readResult.checksum
+	}
+}
+
+function benchmarkComponentScore(rate, baseline) {
+	return Math.max(1, Math.round(1000 * rate / baseline))
+}
+
+function calculateBenchmarkScore(stages) {
+	var calculationRatio = Math.max(stages.calculation.rate / benchmarkState.baseline.calculation, .001)
+	var expressionRatio = Math.max(stages.expression.rate / benchmarkState.baseline.expression, .001)
+	var drawingRatio = Math.max(stages.drawing.rate / benchmarkState.baseline.drawing, .001)
+	var storageRatio = Math.max(stages.storage.rate / benchmarkState.baseline.storage, .001)
+	return Math.round(1000 * Math.pow(calculationRatio, .3) * Math.pow(expressionRatio, .25) * Math.pow(drawingRatio, .2) * Math.pow(storageRatio, .25))
+}
+
+function formatBenchmarkRate(type, rate) {
+	var text = benchmarkI18n()
+	if (type == 'calculation') {
+		return benchmarkFormat(text.millionPerSecond, { value: (rate / 1000000).toFixed(2) })
+	}
+	if (type == 'drawing') {
+		return benchmarkFormat(text.tenThousandPerSecond, { value: (rate / 10000).toFixed(1) })
+	}
+	return benchmarkFormat(text.perSecond, { value: Math.round(rate).toLocaleString() })
+}
+
+function showBenchmarkResult(result, fromHistory) {
+	if (!result || !result.stages) return
+	var text = benchmarkI18n()
+	document.getElementById('benchmark-score').innerHTML = Math.round(result.score).toLocaleString()
+	;['calculation', 'expression', 'drawing', 'storage'].forEach(function (type) {
+		var stage = result.stages[type]
+		if (!stage) return
+		document.getElementById('benchmark-' + type + '-value').innerHTML = Math.round(stage.score).toLocaleString() + text.scoreSuffix
+		if (type == 'storage') {
+			document.getElementById('benchmark-storage-rate').innerHTML = benchmarkFormat(text.storagePerSecond, {
+				read: (stage.readRate / 1000).toFixed(1),
+				write: (stage.writeRate / 1000).toFixed(1)
+			})
+		} else {
+			document.getElementById('benchmark-' + type + '-rate').innerHTML = formatBenchmarkRate(type, stage.rate)
+		}
+	})
+	document.getElementById('benchmark-run').value = text.again
+	if (fromHistory) setBenchmarkProgress(100, text.ready)
+}
+
+function applyBenchmarkLanguage() {
+	var text = benchmarkI18n()
+	var labels = {
+		'benchmark-title': text.title,
+		'benchmark-subtitle': text.subtitle,
+		'benchmark-score-label': text.overall,
+		'benchmark-calculation-label': text.calculation,
+		'benchmark-expression-label': text.expression,
+		'benchmark-drawing-label': text.drawing,
+		'benchmark-storage-label': text.storage,
+		'benchmark-history-title': text.history,
+		'benchmark-export': text.export,
+		'benchmark-clear': text.clear,
+		'benchmark-note': text.note
+	}
+	Object.keys(labels).forEach(function (id) {
+		var element = document.getElementById(id)
+		if (!element) return
+		if (element.tagName == 'INPUT') element.value = labels[id]
+		else element.innerHTML = labels[id]
+	})
+}
+
+function formatBenchmarkDate(dateValue) {
+	var date = new Date(dateValue)
+	if (isNaN(date.getTime())) return '--'
+	try {
+		return date.toLocaleString(typeof zdyset != 'undefined' && zdyset[36] == 'en' ? 'en' : 'zh-CN', {
+			month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'
+		})
+	} catch (error) {
+		return date.toLocaleString()
+	}
+}
+
+function drawBenchmarkHistory(history) {
+	var canvas = document.getElementById('benchmark-history-chart')
+	if (!canvas || !canvas.getContext) return
+	var width = canvas.clientWidth || 620
+	var height = canvas.clientHeight || 185
+	var pixelRatio = Math.min(window.devicePixelRatio || 1, 2)
+	canvas.width = Math.round(width * pixelRatio)
+	canvas.height = Math.round(height * pixelRatio)
+	var context = canvas.getContext('2d')
+	context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0)
+	context.clearRect(0, 0, width, height)
+	var styles = getComputedStyle(document.documentElement)
+	var accent = styles.getPropertyValue('--bjsdfz').trim() || '#7c0a21'
+	var textColor = styles.getPropertyValue('--wzys').trim() || '#222'
+	var text = benchmarkI18n()
+	var values = history.slice(-20)
+	if (!values.length) {
+		context.fillStyle = textColor
+		context.globalAlpha = .55
+		context.font = '14px sans-serif'
+		context.textAlign = 'center'
+		context.fillText(text.noHistory, width / 2, height / 2)
+		context.globalAlpha = 1
+		document.getElementById('benchmark-history-meta').innerHTML = text.localOnly
+		return
+	}
+
+	var scores = values.map(function (item) { return Number(item.score) })
+	var minimum = Math.min.apply(null, scores)
+	var maximum = Math.max.apply(null, scores)
+	var padding = Math.max((maximum - minimum) * .18, maximum * .08, 10)
+	minimum = Math.max(0, minimum - padding)
+	maximum += padding
+	var left = 46
+	var right = width - 16
+	var top = 18
+	var bottom = height - 30
+	var range = maximum - minimum || 1
+
+	context.font = '11px sans-serif'
+	context.strokeStyle = textColor
+	context.fillStyle = textColor
+	context.globalAlpha = .18
+	for (var line = 0; line < 4; line++) {
+		var gridY = top + (bottom - top) * line / 3
+		context.beginPath()
+		context.moveTo(left, gridY)
+		context.lineTo(right, gridY)
+		context.stroke()
+		context.globalAlpha = .6
+		context.textAlign = 'right'
+		context.fillText(Math.round(maximum - range * line / 3), left - 7, gridY + 4)
+		context.globalAlpha = .18
+	}
+
+	function pointX(index) {
+		return values.length == 1 ? (left + right) / 2 : left + (right - left) * index / (values.length - 1)
+	}
+	function pointY(score) {
+		return bottom - (score - minimum) / range * (bottom - top)
+	}
+
+	var gradient = context.createLinearGradient(0, top, 0, bottom)
+	gradient.addColorStop(0, accent)
+	gradient.addColorStop(1, 'rgba(0,0,0,0)')
+	context.beginPath()
+	context.moveTo(pointX(0), bottom)
+	values.forEach(function (item, index) { context.lineTo(pointX(index), pointY(item.score)) })
+	context.lineTo(pointX(values.length - 1), bottom)
+	context.closePath()
+	context.globalAlpha = .18
+	context.fillStyle = gradient
+	context.fill()
+
+	context.beginPath()
+	values.forEach(function (item, index) {
+		var x = pointX(index)
+		var y = pointY(item.score)
+		if (index == 0) context.moveTo(x, y)
+		else context.lineTo(x, y)
+	})
+	context.globalAlpha = 1
+	context.lineWidth = 2
+	context.strokeStyle = accent
+	context.stroke()
+	values.forEach(function (item, index) {
+		context.beginPath()
+		context.arc(pointX(index), pointY(item.score), index == values.length - 1 ? 4 : 2.5, 0, Math.PI * 2)
+		context.fillStyle = accent
+		context.fill()
+	})
+
+	context.fillStyle = textColor
+	context.globalAlpha = .65
+	context.font = '11px sans-serif'
+	if (values.length == 1) {
+		context.textAlign = 'center'
+		context.fillText(formatBenchmarkDate(values[0].createdAt), (left + right) / 2, height - 10)
+	} else {
+		context.textAlign = 'left'
+		context.fillText(formatBenchmarkDate(values[0].createdAt), left, height - 10)
+		context.textAlign = 'right'
+		context.fillText(formatBenchmarkDate(values[values.length - 1].createdAt), right, height - 10)
+	}
+	context.globalAlpha = 1
+	document.getElementById('benchmark-history-meta').innerHTML = benchmarkFormat(text.runs, {
+		count: history.length,
+		date: formatBenchmarkDate(history[history.length - 1].createdAt)
+	})
+}
+
+function renderBenchmarkHistory() {
+	var history = readBenchmarkHistory()
+	drawBenchmarkHistory(history)
+	if (history.length) showBenchmarkResult(history[history.length - 1], true)
+	else {
+		var text = benchmarkI18n()
+		document.getElementById('benchmark-score').innerHTML = '--'
+		document.getElementById('benchmark-status').innerHTML = text.idle
+		document.getElementById('benchmark-run').value = text.start
+		;['calculation', 'expression', 'drawing', 'storage'].forEach(function (type) {
+			document.getElementById('benchmark-' + type + '-value').innerHTML = '--'
+			document.getElementById('benchmark-' + type + '-rate').innerHTML = '--'
+		})
+		setBenchmarkProgress(0)
+	}
+}
+
+function openBenchmarkPanel() {
+	var more = document.getElementById('more')
+	if (more) more.style.display = 'none'
+	document.getElementById('benchmark-panel').style.display = 'block'
+	applyBenchmarkLanguage()
+	renderBenchmarkHistory()
+}
+
+function closeBenchmarkPanel() {
+	document.getElementById('benchmark-panel').style.display = 'none'
+}
+
+async function Benchmark() {
+	if (benchmarkState.running) return
+	benchmarkState.running = true
+	var text = benchmarkI18n()
+	var buttons = ['benchmark-run', 'benchmark-export', 'benchmark-clear']
+	buttons.forEach(function (id) { document.getElementById(id).disabled = true })
+	document.getElementById('benchmark-score').innerHTML = '--'
+	setBenchmarkProgress(4, text.preparing)
 	addlog(language[260] + '：' + language[261])
-	var start = new Date().getTime()
-	for (let i = 0; i < 10000; i++) {
-		random_calulation(20)
-	}
-	var end = new Date().getTime()
-	var defen = Math.round(10000000 / (end - start))
-	addlog(language[260] + ' ' + language[262] + defen)
-	wxldd(language[260] + ' ' + language[262] + defen, 2500)
-	alert(language[260] + ' ' + language[262] + defen)
+	var totalStarted = benchmarkNow()
 
+	try {
+		await benchmarkNextPaint()
+		setBenchmarkProgress(12, text.testingCalculation)
+		await benchmarkNextPaint()
+		var calculation = benchmarkCalculationStage()
+		calculation.score = benchmarkComponentScore(calculation.rate, benchmarkState.baseline.calculation)
+		document.getElementById('benchmark-calculation-value').innerHTML = calculation.score.toLocaleString() + text.scoreSuffix
+		document.getElementById('benchmark-calculation-rate').innerHTML = formatBenchmarkRate('calculation', calculation.rate)
+
+		setBenchmarkProgress(42, text.testingExpression)
+		await benchmarkNextPaint()
+		var expression = benchmarkExpressionStage()
+		expression.score = benchmarkComponentScore(expression.rate, benchmarkState.baseline.expression)
+		document.getElementById('benchmark-expression-value').innerHTML = expression.score.toLocaleString() + text.scoreSuffix
+		document.getElementById('benchmark-expression-rate').innerHTML = formatBenchmarkRate('expression', expression.rate)
+
+		setBenchmarkProgress(60, text.testingDrawing)
+		await benchmarkNextPaint()
+		var drawing = benchmarkDrawingStage()
+		drawing.score = benchmarkComponentScore(drawing.rate, benchmarkState.baseline.drawing)
+		document.getElementById('benchmark-drawing-value').innerHTML = drawing.score.toLocaleString() + text.scoreSuffix
+		document.getElementById('benchmark-drawing-rate').innerHTML = formatBenchmarkRate('drawing', drawing.rate)
+
+		setBenchmarkProgress(78, text.testingStorage)
+		await benchmarkNextPaint()
+		var storage = benchmarkStorageStage()
+		storage.score = benchmarkComponentScore(storage.rate, benchmarkState.baseline.storage)
+		document.getElementById('benchmark-storage-value').innerHTML = storage.score.toLocaleString() + text.scoreSuffix
+		document.getElementById('benchmark-storage-rate').innerHTML = benchmarkFormat(text.storagePerSecond, {
+			read: (storage.readRate / 1000).toFixed(1),
+			write: (storage.writeRate / 1000).toFixed(1)
+		})
+
+		setBenchmarkProgress(95, text.finishing)
+		await benchmarkNextPaint()
+		var stages = { calculation: calculation, expression: expression, drawing: drawing, storage: storage }
+		var score = calculateBenchmarkScore(stages)
+		var result = {
+			schemaVersion: 3,
+			createdAt: new Date().toISOString(),
+			appVersion: typeof thisv == 'undefined' ? '' : String(thisv),
+			score: score,
+			durationMs: benchmarkNow() - totalStarted,
+			stages: stages,
+			environment: {
+				hardwareConcurrency: navigator.hardwareConcurrency || null,
+				devicePixelRatio: window.devicePixelRatio || 1
+			}
+		}
+		var history = saveBenchmarkResult(result)
+		showBenchmarkResult(result, false)
+		drawBenchmarkHistory(history)
+		setBenchmarkProgress(100, benchmarkFormat(text.complete, { time: (result.durationMs / 1000).toFixed(2) }))
+		addlog(language[260] + ' ' + language[262] + score)
+		wxldd(language[260] + ' ' + language[262] + score, 2500)
+	} catch (error) {
+		console.error('跑分失败:', error)
+		setBenchmarkProgress(0, text.failed + (error && error.message ? error.message : error))
+	} finally {
+		benchmarkState.running = false
+		buttons.forEach(function (id) { document.getElementById(id).disabled = false })
+	}
+}
+
+function clearBenchmarkHistory() {
+	var text = benchmarkI18n()
+	if (!confirm(text.confirmClear)) return
+	try {
+		localStorage.removeItem(benchmarkState.storageKey)
+	} catch (error) {
+		console.warn('无法清空跑分历史:', error)
+	}
+	renderBenchmarkHistory()
+	wxldd(text.cleared, 1800)
+}
+
+function exportBenchmarkHistory() {
+	var text = benchmarkI18n()
+	var history = readBenchmarkHistory()
+	if (!history.length) {
+		wxldd(text.nothingToExport, 1800)
+		return
+	}
+	var exportData = {
+		exportedAt: new Date().toISOString(),
+		application: typeof name == 'undefined' ? 'AZHSHB' : name,
+		version: typeof thisv == 'undefined' ? '' : String(thisv),
+		benchmarkSchemaVersion: 3,
+		results: history
+	}
+	var blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json;charset=utf-8' })
+	var link = document.createElement('a')
+	link.href = URL.createObjectURL(blob)
+	link.download = 'azhshb-benchmark-' + new Date().toISOString().replace(/[:.]/g, '-') + '.json'
+	document.body.appendChild(link)
+	link.click()
+	document.body.removeChild(link)
+	setTimeout(function () { URL.revokeObjectURL(link.href) }, 0)
+	wxldd(text.exported, 1800)
 }
 
 
