@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>啊这函数画板 · 用户文档</title>
+<style>
+  :root {
+    --red: #7c0a21;
+    --red-a: rgba(124, 10, 33, .39);
+    --red-faint: rgba(124, 10, 33, .1);
+    --ink: #26201f;
+    --ink-soft: #7a6b6d;
+    --paper: #fffdf9;
+    --code-bg: #f7f1ee;
+    --border: rgba(124, 10, 33, .25);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink);
+    font-family: 'Times New Roman', 宋体, serif, 'Liberation Mono'; line-height: 1.8; }
+  .page { max-width: 900px; margin: 0 auto; padding: 40px 24px 90px; }
+  .panel { background: rgba(255,255,255,.85); border-radius: .15em;
+    box-shadow: 0 1.7565932872px 9px var(--red-a); padding: 20px 26px; margin-bottom: 18px; }
+  header { margin-bottom: 26px; }
+  h1 { margin: 0 0 6px; font-size: 2rem; color: var(--red); }
+  .meta { color: var(--ink-soft); font-size: .95rem; }
+  h2 { font-size: 1.35rem; margin: 42px 0 14px; padding-left: 10px; border-left: 5px solid var(--red); }
+  h2 > a, h3 > a { color: inherit; text-decoration: none; }
+  h3 { font-size: 1.1rem; margin: 26px 0 8px; color: var(--red); }
+  p, li { font-size: .98rem; }
+  code { font-family: Consolas, 'Courier New', monospace; background: var(--code-bg);
+    border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; font-size: .86em; word-break: break-all; color: var(--red); }
+  pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: .15em;
+    padding: 14px 16px; overflow-x: auto; }
+  pre code { border: none; background: none; padding: 0; color: var(--ink); }
+  table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: .93rem; }
+  th, td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; vertical-align: top; }
+  th { background: var(--red-faint); color: var(--red); }
+  tr:nth-child(even) td { background: #fbf6f4; }
+  .tip { background: #eef4ee; border-left: 4px solid #3a7d44; border-radius: 0 .15em .15em 0;
+    padding: 10px 16px; margin: 14px 0; font-size: .93rem; }
+  .warn { background: var(--red-faint); border-left: 4px solid var(--red); border-radius: 0 .15em .15em 0;
+    padding: 10px 16px; margin: 14px 0; font-size: .93rem; }
+  a { color: var(--red); }
+  .back { display: inline-block; margin-bottom: 14px; font-size: .95rem; }
+  ul, ol { padding-left: 26px; }
+  .ex { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;
+    padding: 10px 16px; margin: 10px 0; background: rgba(255,255,255,.9);
+    border-radius: .15em; box-shadow: 0 0.7565932872px 5px var(--red-a); }
+  .ex a { font-weight: bold; white-space: nowrap; text-decoration: none; }
+  .ex a:hover { text-decoration: underline; }
+</style>
+<script src="cache-register.js" defer></script>
+</head>
+<body>
+<div class="page">
+  <a class="back" href="welcome.html">← 返回入口页</a> ·
+  <a class="back" href="index.html">进入主项目 →</a>
+  <div class="panel">
+    <h1>啊这函数画板 · 用户文档</h1>
+    <div class="meta">本地合并版 v20 · 无需安装、无需联网、纯浏览器运行 ·
+      官网 <a href="http://h.ssssssss.eu.org/" target="_blank">http://h.ssssssss.eu.org/</a></div>
+  </div>
+
+  <h2 id="start">一、快速开始</h2>
+  <ol>
+    <li>用浏览器（推荐 Chrome / Edge）打开 <code>index.html</code>，或先打开 <code>welcome.html</code> 点“进入主项目”。</li>
+    <li>页面加载完毕后即自动以“本地用户”身份登录，<b>全部功能已解锁</b>，不再需要账号或服务器。</li>
+    <li>顶部输入解析式（如 <code>x^2</code>）、颜色、取值范围，点“创建”即可画图；拖动空白处移动坐标系，滚轮缩放。</li>
+    <li>主界面“文档”按钮、入口页与本文档之间可互相跳转；分享画板按<a href="#url">URL 传值标准</a>拼一条链接即可。</li>
+  </ol>
+  <div class="tip">本项目完全离线可用：把整个文件夹拷到 U 盘或内网，双击 index.html 就能用。</div>
+
+  <h2 id="jxj">二、重点：计算解析解并化简（带变量）</h2>
+  <p>入口：主项目 <b>文档 → 啊这计算器</b>，在“输入要计算的表达式”框输入后点
+    <b>“计算解析解并化简”</b>（或“化简”）。结果可“同步结果到输入框”继续运算，或下载为文件。</p>
+
+  <h3>2.1 三类输入</h3>
+  <table>
+    <tr><th>输入类型</th><th>行为</th><th>示例</th></tr>
+    <tr><td>普通表达式</td><td>精确化简（分数、幂、多项式展开合并）</td><td><code>(x+1)^2-(x-1)^2 → 4*x</code></td></tr>
+    <tr><td>方程 / 方程组</td><td>返回精确解析解；一次/二次方程用符号求根公式，支持含变量系数</td><td><code>x^2=4 → x=-2, x=2</code>；<code>2x+3y=12, x-y=1 → x=3, y=2</code></td></tr>
+    <tr><td>含画板函数 g*</td><td>先展开成<b>含变量的符号表达式</b>，再求解/化简（见 2.2）</td><td><code>gj(1,0,0,0,) → 含 a 的表达式</code></td></tr>
+  </table>
+
+  <h3>2.2 画板函数的符号展开（与原服务端行为一致）</h3>
+  <p>画板对象之间用 g* 函数互相引用。<b>解析解不会把变量代入成小数</b>，而是返回含变量符号的精确表达式。
+    例如画板中有变量 <code>a</code>、点0 <code>(a, 2)</code>、点1 <code>(2, 5a+3)</code>、
+    曲线0 <code>gs(x,1,0)</code>（过这两点的函数）、曲线1 <code>1</code>：</p>
+  <pre><code>gs(x,1,0,h)   →   (5*a + 1)*x/(-a + 2) + (5*a^2 + 3*a - 4)/(a - 2)
+gd(0,0)       →   a
+gj(1,0,0,0,)  →   两曲线交点的 x 坐标（含 a 的精确表达式）
+gj(1,0,0,1,)  →   交点的 y 坐标（此例为 1）</code></pre>
+  <p>把变量 a 的值改为任意数，表达式随之精确成立（a=-3.62 时 gj(1,0,0,0,) = -3.2913…，与画板绘制一致）。</p>
+
+  <h3>2.3 画板函数速查</h3>
+  <table>
+    <tr><th>函数</th><th>含义</th><th>符号展开结果</th></tr>
+    <tr><td><code>gc(变量号, xy)</code></td><td>引用变量</td><td>变量名符号（如 <code>a</code>）</td></tr>
+    <tr><td><code>gd(点号, xy)</code></td><td>点的 x/y 坐标（xy=0/1）</td><td>坐标表达式（递归展开）</td></tr>
+    <tr><td><code>gh(曲线号)</code></td><td>曲线的解析式</td><td>含变量的解析式</td></tr>
+    <tr><td><code>gz(曲线号, 变量号, x值)</code></td><td>曲线在某处的函数值</td><td>代入后的表达式</td></tr>
+    <tr><td><code>gs(x, 点1, 点2, …[, h])</code></td><td>过几点的函数；带 <code>h</code> 返回解析式</td><td>两点→一次函数；多点→拉格朗日插值</td></tr>
+    <tr><td><code>gj(曲线1, 曲线2, 序号, xy)</code></td><td>两曲线第“序号”个交点，xy=0 取 x / 1 取 y / 2 取个数</td><td>关于 x 解方程的精确根（±根号/分数形式）</td></tr>
+    <tr><td><code>gl(点1, 点2)</code></td><td>两点距离</td><td>平方根表达式</td></tr>
+    <tr><td><code>go/gi/gp/gw/gg/wt/rt</code></td><td>斜率/角度/角平分线等</td><td>按当前数值计算（无符号解析式）</td></tr>
+  </table>
+  <div class="tip">gj 支持工程里常见的<b>末尾多逗号</b>写法（如 <code>gj(1,0,0,0,)</code>），全角逗号/括号也会自动纠正。</div>
+  <div class="warn">符号求根覆盖一次、二次方程；更高次仅在系数全为数字时求精确根，否则自动回退为按当前变量值的数值计算。gj 的交点序号与绘制时的数值搜索顺序可能不同，多交点时建议逐一确认。</div>
+
+  <h3>2.4 在线示例（点击直接跳进画板并自动求解）</h3>
+  <div class="ex">
+    <code>calcxj=x^2=4</code>
+    <a href="index.html?calcxj=x%5E2%3D4">运行 →</a>
+  </div>
+  <div class="ex">
+    <code>calcxj=2x+3y=12, x-y=1</code>
+    <a href="index.html?calcxj=2x%2B3y%3D12%2C%20x-y%3D1">运行 →</a>
+  </div>
+  <div class="ex">
+    <code>f1=x^2, f2=1, calcxj=gj(1,0,0,0,)</code>
+    <a href="index.html?f1=x%5E2&amp;f2=1&amp;calcxj=gj%281%2C0%2C0%2C0%2C%29">带曲线运行 →</a>
+  </div>
+  <div class="ex">
+    <code>calcxj=gj(1,0,0,1,)^2-gj(1,0,0,0,)</code>
+    <a href="index.html?calcxj=gj%281%2C0%2C0%2C1%2C%29%5E2-gj%281%2C0%2C0%2C0%2C%29">混合运算 →</a>
+  </div>
+
+  <h2 id="features">三、功能总览</h2>
+  <table>
+    <tr><th>类别</th><th>功能</th><th>入口</th></tr>
+    <tr><td>绘图</td><td>函数曲线（sin、cos、tan、双曲、sqrt、ln…）、极坐标（r:…）、取值范围、绘制精度、缩放、黑白模式、自动合理化、背景图</td><td>“新建曲线”栏 / 设置</td></tr>
+    <tr><td>几何构造</td><td>构造交点、解析交点、过点函数、线段、圆、垂线、平行线、角平分线、中点、组</td><td>“执行操作”下拉框</td></tr>
+    <tr><td>度量</td><td>坐标、角度、距离；标记函数上的点</td><td>选中对象后执行</td></tr>
+    <tr><td>微积分</td><td>求导、积分、极值点/驻点、零点</td><td>选中曲线后执行</td></tr>
+    <tr><td>计算器</td><td>数值计算、表达式化简、<b>计算解析解并化简</b>、定积分、求和、代入、列项</td><td>“文档 → 啊这计算器”</td></tr>
+    <tr><td>动画</td><td>变量动画（轨迹）、常数动画</td><td>设置/工具面板</td></tr>
+    <tr><td>性能</td><td><b>跑分</b>：随机 10000 条算式求值测速，得分 = 10000000/耗时(ms)，弹窗显示并写入日志（设置面板左侧）</td><td>“设置 → 跑分”</td></tr>
+    <tr><td>协作（本地）</td><td>本地房间：创建房间 → 保存快照 → 重进房间恢复画板；聊天记录本地保存</td><td>“同步信息 / 联机”面板</td></tr>
+    <tr><td>文件</td><td>打开/保存 .azx 画板文件、截图导出 PNG、保存码复制粘贴</td><td>“文档 → 打开与保存”</td></tr>
+  </table>
+
+  <h2 id="url">四、URL 传值标准（分享链接）</h2>
+  <p>在 <code>index.html</code> 后附加查询参数即可一键还原画板状态。所有参数均可选、可组合。</p>
+  <h3>1. 曲线（最多 9 条）</h3>
+  <table>
+    <tr><th>参数</th><th>说明</th><th>示例</th></tr>
+    <tr><td><code>f1 … f9</code></td><td>曲线解析式（标准语法）</td><td><code>f1=sin(x)/x</code></td></tr>
+    <tr><td><code>c1 … c9</code></td><td>对应颜色（颜色名或 #rrggbb）</td><td><code>c1=blue</code></td></tr>
+    <tr><td><code>r1 … r9</code></td><td>对应取值范围，格式 <code>下限:上限</code></td><td><code>r1=-5:5</code></td></tr>
+  </table>
+  <p>快捷写法：<code>f=</code>、<code>c=</code>、<code>r=</code> 等价于 <code>f1=</code>、<code>c1=</code>、<code>r1=</code>。</p>
+  <h3>2. 点（最多 9 个）</h3>
+  <table>
+    <tr><th>参数</th><th>说明</th><th>示例</th></tr>
+    <tr><td><code>p1 … p9</code></td><td>点坐标，格式 <code>x,y</code></td><td><code>p1=3,2</code></td></tr>
+    <tr><td><code>p1n … p9n</code></td><td>点名称（可选）</td><td><code>p1n=A</code></td></tr>
+  </table>
+  <h3>3. 视图与画板</h3>
+  <table>
+    <tr><th>参数</th><th>含义</th><th>默认</th></tr>
+    <tr><td><code>x</code> / <code>y</code></td><td>坐标系原点位置（像素）</td><td>300 / 400</td></tr>
+    <tr><td><code>z</code></td><td>缩放（20 = 1:1）</td><td>20</td></tr>
+    <tr><td><code>w</code> / <code>h</code></td><td>显示宽 / 高（像素）</td><td>1000 / 800</td></tr>
+    <tr><td><code>g</code></td><td>绘制精度（每条曲线采样点数）</td><td>100</td></tr>
+  </table>
+  <h3>4. 计算器与其它</h3>
+  <table>
+    <tr><th>参数</th><th>说明</th></tr>
+    <tr><td><code>calc</code></td><td>表达式：填入“啊这计算器”并自动打开该面板</td></tr>
+    <tr><td><code>calcxj</code></td><td>表达式：填入并<b>自动执行“计算解析解并化简”</b>（支持方程、方程组、g* 画板函数）</td></tr>
+    <tr><td><code>t</code></td><td>页面标题</td></tr>
+    <tr><td><code>azx</code></td><td>保存码（“保存”生成的 LZString 压缩串），打开时自动恢复整个画板</td></tr>
+  </table>
+  <h3>5. 完整示例</h3>
+  <pre><code>index.html?f=sin(x)/x&amp;c=blue
+index.html?f1=x^2&amp;f2=-x^2+8&amp;c1=red&amp;c2=green&amp;z=30
+index.html?calcxj=x^2=4
+index.html?f1=x^2&amp;f2=1&amp;calcxj=gj(1,0,0,0,)
+index.html?t=我的画板&amp;g=200&amp;f=(x-1)^2-(x+1)^2</code></pre>
+  <div class="tip">解析式中的 + 直接写即可；如链接会经过吞符号的渠道，可把 + 写成 %2B。welcome.html 里有可视化的“分享链接生成器”。</div>
+
+  <h2 id="room">五、本地房间（原联机功能）</h2>
+  <p>本版本把原 Node.js 服务器（AZTXserver.js）合并进客户端，房间与聊天全部在本地完成：</p>
+  <ul>
+    <li><b>创建房间</b>：生成 5 位房间号，并保存当前画板快照。</li>
+    <li><b>加入房间</b>：输入房间号，自动恢复该房间的画板快照。</li>
+    <li><b>同步信息</b>：每次改动自动更新房间快照（仅保存在本机内存）。</li>
+    <li><b>聊天</b>：消息与历史记录保存在本地。</li>
+  </ul>
+  <div class="warn">与旧版不同：本地模式<b>没有真正的多人实时同步</b>（无服务器可中转）。若需多人协作，请用 URL 分享链接或 .azx 文件交换画板。</div>
+
+  <h2 id="settings">六、设置与跑分</h2>
+  <ul>
+    <li><b>设置面板</b>：主题颜色/透明度、文字颜色、背景、网格乘数、容差等。修改前建议先阅读本节（主界面设置面板右上角文字可点击直达这里）。</li>
+    <li><b>清空设置</b>：恢复默认主题；<b>导出设置</b>：把当前设置导出为文件。</li>
+    <li><b>跑分</b>：随机生成 10000 条算式并求值，得分 = 10000000 ÷ 耗时(ms)，越高越快。结果弹窗显示并写入日志，<b>不会改动画板内容</b>。</li>
+  </ul>
+
+  <h2 id="faq">七、常见问题（FAQ）</h2>
+  <ul>
+    <li><b>Q：还连不上 120.48.70.244 / ssssssss.eu.org？</b><br>不需要。本版本已完全离线，任何远程连接代码都已被移除或短路；官网仅为 <a href="http://h.ssssssss.eu.org/" target="_blank">http://h.ssssssss.eu.org/</a>。</li>
+    <li><b>Q：解析解为什么会返回含 a 的表达式而不是小数？</b><br>这正是本功能的设计：画板函数按符号展开，变量保持符号，得到随变量变化的精确解析式。需要数值时把 a 的具体值代入即可。</li>
+    <li><b>Q：化简结果出现 i（虚数单位）？</b><br>说明表达式涉及复数（如 sqrt(-1)），属正常结果。</li>
+    <li><b>Q：为什么 <code>103^34243</code> 不显示 Infinity？</b><br>“化简”按钮使用 BigInt 任意精度有理数计算，会展开成完整的精确整数，而不是用双精度浮点求近似值。</li>
+    <li><b>Q：gj 报“曲线不存在/未找到结果”？</b><br>检查引用的曲线/点/圆编号是否存在于画板，以及交点是否真的存在（如两平行线无交点）。</li>
+    <li><b>Q：如何恢复上次画的内容？</b><br>① 打开保存的 .azx 文件；② 粘贴保存码；③ 若创建过本地房间，重新加入该房间号即可恢复快照。</li>
+    <li><b>Q：加载速度为什么变快了？</b><br>脚本改为 defer 并行下载、按序执行，浏览器原生缓存替代旧的 localStorage+eval 缓存，启动即初始化。</li>
+  </ul>
+
+  <h2 id="arch">八、附录：实现原理（简要）</h2>
+  <ul>
+    <li><code>Encrypted.JS / s.js / dc.JS / la.js</code>：画板主体——对象数据模型（函数/点/变量/组列表）、Canvas 绘制、几何构造与微积分。</li>
+    <li><code>algebrite.bundle-for-browser.js / math.js</code>：符号计算库（求导、积分、roots、有理化等）。</li>
+    <li><code>nerdamer.core.js + nerdamer.calculus.js / nerdamer.algebra.js / nerdamer.solve.js</code>（后三个为本版本新增的 nerdamer 扩展）：分式<b>通分约简</b>（同 sympy.cancel，默认分母不为 0）、因式分解、方程组求解。</li>
+    <li><code>az_simplify.js</code>（新增）：精确有理数化简引擎——Frac 分数类基于 BigInt，递归下降解析器 + AST 化简，取自 <code>simplifier (1).html</code>。化简按钮对大整数幂（如 <code>103^34243</code>）执行任意精度精确展开，不再溢出为 Infinity。</li>
+    <li><code>az_server_jx.js</code>（新增）：原封移植 <code>serverdesktop\AZTXserver2.js</code> 的 jsjxj 解析解引擎（hqjxj/cljxs/azgetjd_w/jiaodian_*_w 等），g* 调用展开为含变量符号的精确表达式；仅其化简环节 senpoly 由原 pyhuajian2(Python) 替换为本地化简器，并补充了分式约简（nerdamer gcd，等价 sympy.cancel）。</li>
+    <li><code>az_local.js</code>（新增）：①本地环回总线，替代 AZTXserver.js（登录/房间/聊天/同步/心跳全部本地）；②方程/方程组精确求解（一次/二次符号求根 + Frac 高斯消元）、解析解回退引擎、普通表达式 AZSimplify / nerdamer(约分) / Algebrite 多级兜底。</li>
+    <li><code>az_url.js</code>（新增）：URL 传值标准解析器（安全，无 eval），含 calc/calcxj 计算器直达。</li>
+    <li><code>welcome.html</code>：入口/示例页；<code>用户文档.html</code>：即本文档，与主界面“文档”按钮互通。</li>
+  </ul>
+  <p class="meta" style="margin-top:40px">文档版本 2.0 · 对应主程序 v20（本地合并版）</p>
+</div>
+</body>
+</html>
+
+

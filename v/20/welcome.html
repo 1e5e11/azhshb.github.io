@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>啊这函数画板 · 入口</title>
+<style>
+  :root {
+    --red: #7c0a21;
+    --red-a: rgba(124, 10, 33, .39);
+    --red-faint: rgba(124, 10, 33, .12);
+    --ink: #26201f;
+    --ink-soft: #7a6b6d;
+    --paper: #fffdf9;
+    --code-bg: #f7f1ee;
+    --border: rgba(124, 10, 33, .25);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; background: var(--paper); color: var(--ink);
+    font-family: 'Times New Roman', 宋体, serif, 'Liberation Mono';
+  }
+  .page { max-width: 900px; margin: 0 auto; padding: 40px 22px 80px; }
+  .panel {
+    background: rgba(255, 255, 255, .82);
+    border: 0; border-radius: .15em;
+    box-shadow: 0 1.7565932872px 9px var(--red-a);
+    padding: 20px 24px; margin-bottom: 18px;
+  }
+  .badge {
+    display: inline-block; font-size: .85rem; letter-spacing: .1em;
+    color: #fff; background: var(--red); border-radius: .15em; padding: 3px 14px; margin-bottom: 14px;
+  }
+  h1 { font-size: clamp(1.9rem, 5vw, 2.6rem); margin: 0 0 10px; color: var(--red); }
+  .sub { color: var(--ink-soft); font-size: 1.02rem; line-height: 1.75; margin: 0; max-width: 66ch; }
+  .sub b { color: var(--red); }
+  h2 { font-size: 1.3rem; color: var(--red); margin: 34px 0 12px; padding-left: 10px; border-left: 5px solid var(--red); }
+  .actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
+  .btn {
+    display: inline-block; text-decoration: none; font-weight: bold; font-size: 1rem;
+    padding: 10px 26px; border-radius: .15em; border: 0; cursor: pointer;
+    font-family: inherit; transition: box-shadow .2s;
+    box-shadow: 0 0.7565932872px 5px var(--red-a);
+  }
+  .btn:hover { box-shadow: 0 0 10px var(--red-a); }
+  .btn-primary { background: var(--red); color: #fff; font-style: italic; }
+  .btn-ghost { background: #fff; color: var(--red); border: 1px solid var(--border); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
+  .card { background: rgba(255,255,255,.85); border-radius: .15em; box-shadow: 0 0.7565932872px 5px var(--red-a); padding: 16px 18px; }
+  .card h3 { margin: 0 0 6px; font-size: 1.02rem; color: var(--red); }
+  .card p { margin: 0; color: var(--ink-soft); font-size: .92rem; line-height: 1.65; }
+  .ex {
+    display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;
+    padding: 11px 16px; margin-bottom: 10px; background: rgba(255,255,255,.9);
+    border-radius: .15em; box-shadow: 0 0.7565932872px 5px var(--red-a);
+  }
+  code {
+    font-family: Consolas, 'Courier New', monospace; font-size: .84rem; color: var(--red);
+    background: var(--code-bg); border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; word-break: break-all;
+  }
+  .ex a, .link { color: var(--red); font-weight: bold; text-decoration: none; white-space: nowrap; }
+  .ex a:hover, .link:hover { text-decoration: underline; }
+  .builder label { display: block; font-size: .9rem; color: var(--ink-soft); margin: 12px 0 4px; }
+  .builder input, .builder select {
+    width: 100%; padding: 8px 12px; border-radius: .15em; border: 0;
+    border-bottom: 2px solid transparent; outline: none;
+    background: rgba(255,255,255,.9); color: var(--ink);
+    font-family: 'Times New Roman', 宋体, serif; font-style: italic; font-size: 1rem;
+    box-shadow: 0 0.7565932872px 5px var(--red-a);
+  }
+  .builder input:focus, .builder select:focus { border-bottom: 2px solid var(--red); box-shadow: 0 0 10px var(--red-a); }
+  .builder .go { margin-top: 16px; width: 100%; }
+  .note { font-size: .88rem; color: var(--ink-soft); background: var(--red-faint); border-radius: .15em; padding: 8px 14px; margin: 12px 0; }
+  footer { margin-top: 40px; color: var(--ink-soft); font-size: .88rem; text-align: center; }
+  footer a { color: var(--red); }
+</style>
+<script src="cache-register.js" defer></script>
+</head>
+<body>
+<div class="page">
+  <div class="panel">
+    <div class="badge">AZHS · 本地合并版 v20</div>
+    <h1>啊这函数画板</h1>
+    <p class="sub">
+      一个纯浏览器端的函数画板：绘制曲线、构造几何对象、求导积分、<b>计算解析解并化简（支持含变量的表达式）</b>、动画轨迹……
+      本版本已将服务端合并进客户端——<b>无需 Node.js、无需联网</b>，双击网页即可使用全部功能。
+      官网：<a class="link" href="http://h.ssssssss.eu.org/" target="_blank">http://h.ssssssss.eu.org/</a>
+    </p>
+    <div class="actions">
+      <a class="btn btn-primary" href="index.html">进入主项目 →</a>
+      <a class="btn btn-ghost" href="用户文档.html">用户文档</a>
+      <a class="btn btn-ghost" href="用户文档.html#jxj">解析解文档</a>
+      <a class="btn btn-ghost" href="simplifier (1).html">独立化简器</a>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card"><h3>📈 函数绘图</h3><p>解析式建曲线、极坐标、取值范围、精度与缩放控制、自动合理化、黑白模式。</p></div>
+    <div class="card"><h3>📐 几何构造</h3><p>交点、线段、圆、垂线、平行线、角平分线、中点、组，度量的都是含变量的解析式。</p></div>
+    <div class="card"><h3>🧮 符号计算</h3><p>求导、积分、极值/驻点/零点；解析解返回<b>含变量的精确表达式</b>，替代原服务端 Python。</p></div>
+    <div class="card"><h3>🔗 分享链接</h3><p>URL 传值标准：曲线、点、视图、计算器、保存码，一条链接直达画板。</p></div>
+  </div>
+
+  <h2>重点功能：计算解析解并化简（带变量）</h2>
+  <div class="panel">
+    <p style="margin:0 0 10px">
+      在主项目 <b>文档 → 啊这计算器</b> 中输入表达式，点<b>“计算解析解并化简”</b>：
+      方程与方程组返回精确解；画板函数 <code>gj / gs / gc / gd / gz / gl</code>
+      会被展开成<b>含变量（如 a）的符号表达式</b>，而不是代入数值的小数——与原服务端行为一致。
+    </p>
+    <div class="note">示例1：gj(1,0,0,0,) 求曲线1与曲线0交点的 x 坐标（支持末尾多逗号写法）。</div>
+    <div class="ex">
+      <code>index.html?calcxj=x^2=4</code>
+      <a href="index.html?calcxj=x%5E2%3D4">打开画板并求解 →</a>
+    </div>
+    <div class="ex">
+      <code>index.html?calcxj=2x+3y=12,%20x-y=1</code>
+      <a href="index.html?calcxj=2x%2B3y%3D12%2C%20x-y%3D1">打开画板并求解 →</a>
+    </div>
+    <div class="ex">
+      <code>index.html?f1=x^2&amp;f2=1&amp;calcxj=gj(1,0,0,0,)</code>
+      <a href="index.html?f1=x%5E2&amp;f2=1&amp;calcxj=gj%281%2C0%2C0%2C0%2C%29">带画板曲线的交点解析解 →</a>
+    </div>
+    <div class="ex">
+      <code>index.html?calcxj=gj(1,0,0,1,)^2-gj(1,0,0,0,)</code>
+      <a href="index.html?calcxj=gj%281%2C0%2C0%2C1%2C%29%5E2-gj%281%2C0%2C0%2C0%2C%29">交点坐标混合运算 →</a>
+    </div>
+    <div class="note">完整语法与画板函数表见 <a class="link" href="用户文档.html#jxj">用户文档 · 解析解与化简</a>。</div>
+  </div>
+
+  <h2>更多示例链接（点开即用）</h2>
+  <div class="ex">
+    <code>index.html?f=sin(x)/x&amp;c=blue</code>
+    <a href="index.html?f=sin(x)/x&c=blue">打开 →</a>
+  </div>
+  <div class="ex">
+    <code>index.html?f1=x^2&amp;f2=-x^2+8&amp;c1=red&amp;c2=green&amp;z=30</code>
+    <a href="index.html?f1=x^2&f2=-x^2+8&c1=red&c2=green&z=30">打开 →</a>
+  </div>
+  <div class="ex">
+    <code>index.html?p1=1,2&amp;p2=3,4&amp;z=40&amp;x=200&amp;y=300</code>
+    <a href="index.html?p1=1,2&p2=3,4&z=40&x=200&y=300">打开 →</a>
+  </div>
+
+  <h2>分享链接生成器</h2>
+  <div class="panel builder">
+    <label for="b-f">函数解析式 f1（标准语法，如 sin(x)/x）</label>
+    <input id="b-f" placeholder="sin(x)/x">
+    <label for="b-c">颜色 c1</label>
+    <select id="b-c">
+      <option value="black">black</option>
+      <option value="red">red</option>
+      <option value="blue">blue</option>
+      <option value="green">green</option>
+      <option value="orange">orange</option>
+      <option value="purple">purple</option>
+    </select>
+    <label for="b-r">取值范围 r1（下限:上限，留空为全域）</label>
+    <input id="b-r" placeholder="-10:10">
+    <label for="b-z">缩放 z（默认 20）</label>
+    <input id="b-z" placeholder="20">
+    <label for="b-j">计算器表达式（自动执行“计算解析解并化简”，可选）</label>
+    <input id="b-j" placeholder="x^2=4 或 gj(1,0,0,0,)">
+    <label for="b-t">标题 t（可选）</label>
+    <input id="b-t" placeholder="我的画板">
+    <button class="btn btn-primary go" onclick="build()">生成并进入</button>
+  </div>
+
+  <footer>啊这函数画板（本地合并版） · 官网 <a href="http://h.ssssssss.eu.org/" target="_blank">http://h.ssssssss.eu.org/</a> · <a href="index.html">index.html</a> · <a href="用户文档.html">用户文档</a></footer>
+</div>
+<script>
+function build() {
+  var p = new URLSearchParams();
+  var f = document.getElementById('b-f').value.trim();
+  var c = document.getElementById('b-c').value;
+  var r = document.getElementById('b-r').value.trim();
+  var z = document.getElementById('b-z').value.trim();
+  var j = document.getElementById('b-j').value.trim();
+  var t = document.getElementById('b-t').value.trim();
+  if (f) { p.set('f', f); p.set('c', c); }
+  if (r) p.set('r', r);
+  if (z) p.set('z', z);
+  if (j) p.set('calcxj', j);
+  if (t) p.set('t', t);
+  location.href = 'index.html' + (p.toString() ? '?' + p.toString() : '');
+}
+</script>
+</body>
+</html>
