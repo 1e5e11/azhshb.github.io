@@ -543,8 +543,8 @@ var language_en = [
 ]
 var language = []
 const update = {
-	new: [],
-	change: [],
+	new: ["新增：跑分"],
+	change: ["计算解析解本地化", "灵动岛圆形液态玻璃"],
 	delete: [],
 	xiufu: []
 }
@@ -1164,11 +1164,7 @@ function window_onload() {
 			//document.getElementById('klkl').value = fr.result;
 
 			//console.log(LZString.decompressFromUTF16(fr.result))
-			try {
-				huif(LZString.decompressFromUTF16(fr.result))
-			} catch (error) {
-				huif(fromCode(fr.result))
-			}
+			try { huif(fr.result); } catch (error) { alert('导入失败：' + error.message); }
 
 
 		}
@@ -1211,23 +1207,7 @@ function window_onload() {
 		}
 	}*/
 	//'QETUO12345wryip67890'
-	setTimeout(() => {
-		var jiazaijsliebiao = ['http://h.ssssssss.eu.org/q/p/AAAAA.js', 'math.js', 'algebrite.bundle-for-browser.js',]
-		/* 本地合并版：移除远程脚本加载（离线可用，也更快更安全） */
-		if (isusehuancun) {
-			var js = document.createElement('script');
-			js.innerHTML = localStorage.getItem('localJSkatex.min.js');
-			document.getElementsByTagName('head')[0].appendChild(js);
-		} else {
-			var js = document.createElement('script');
-			js.src = 'katex.min.js'
-			document.getElementsByTagName('head')[0].appendChild(js);
 
-		}
-
-
-		//addlog('加载完全完毕')
-	}, 600);
 
 	setTimeout(() => {
 		if (zdyset[26] == 'true') {
@@ -1898,69 +1878,61 @@ function addEvent(obj, xEvent, fn) {
 	}
 }
 
-function huif(m, n) { //导入函数
-	//console.log(m)
-	var huifuma = fromCode2(m)
+function decodeBoard(source) {
+	if (typeof source !== 'string' || !source.trim()) throw new Error('画板文件为空或格式错误');
+	if (/^\d+و³/.test(source)) return source;
+	if (source.substring(0, 3) === 'set') return source;
+	var decoded;
+	try { decoded = LZString.decompressFromUTF16(source); } catch (e) {}
+	if (typeof decoded === 'string' && /^\d+و³/.test(decoded)) return decoded;
+	decoded = fromCode(source.trim());
+	if (/^\d+و³/.test(decoded) || decoded.substring(0, 3) === 'set') return decoded;
+	throw new Error('无法识别画板文件格式');
+}
 
-
-	hslb = []
-	cllb = []
-	dlb = []
-	wzpzlb = []
-	drawlj = []
-	clearLB('all') /* 换画板时必须清空 gj/gz/gc 等解析缓存，否则会串用上一个画板的缓存值 */
-	document.getElementById('wanggexian').innerHTML = ''
-	document.getElementById('hslbxs').innerHTML = `<div style="position: absolute;;width: 100%;height:100%;top:0px;left:0px;z-index: 0;" onclick="qkxz()"></div>`
-
-	//document.getElementById("hslbxs").innerHTML=""
-	if (huifuma.substring(0, 3) == 'set') {
-		inset(f)
-		return
+function huif(m, n) { //导入函数：先验证/迁移，再替换画板。
+	var source = m === true ? n : m;
+	if (source === undefined) source = document.getElementById('klkl').value;
+	var pr = decodeBoard(source);
+	if (pr.substring(0, 3) === 'set') { inset(pr); return; }
+	var fields = pr.split('و³');
+	var version = Number(fields[0]);
+	if (fields.length < 4) throw new Error('画板数据不完整');
+	if (version > thisv && !confirm(language[216])) return false;
+	if (version <= 17) {
+		// v17 及更早为 gethsz(变量编号, 函数编号)。只迁移表达式字段。
+		[1, 2, 3].forEach(function (section) {
+			fields[section] = fields[section].split('ن').map(function (row) {
+				var values = row.split('|');
+				var indexes = section === 1 ? [0, 2, 3] : section === 2 ? [0, 1] : [1];
+				indexes.forEach(function (i) {
+					if (values[i]) values[i] = values[i].replace(/\b(gethsz|gz)\(\s*(\d+)\s*,\s*(\d+)\s*,?\s*\)/g, '$1($3,$2)');
+				});
+				return values.join('|');
+			}).join('ن');
+		});
 	}
-	if (huifuma.split("و³")[0] == String(thisv)) {
-		var pr = huifuma
-	} else {
-		if (Number(huifuma.split("و³")[0]) > thisv) {
-			if (confirm(language[216]) == true) {
-				var pr = huifuma
-			} else {
-				return false
-			}
-		} else {
-			if (confirm(language[217]) == true) {
-				if (Number(huifuma.split("و³")[0]) < 11) {
-					var pr = "و³" + huifuma
-				} else {
-					var pr = huifuma
-				}
-				if (Number(huifuma.split("و³")[0]) < 17) {
-					pr = pr.replace(new RegExp('r=', 'g'), 'r:')
-					pr = pr.replace(new RegExp('x=', 'g'), 'x:')
-					pr = pr.replace(new RegExp('p=', 'g'), 'p:')
-					setTimeout(() => {
-						for (let i = 0; i < hslb.length; i++) {
-							const element = hslb[i].split('|');
-							var zuo = element[2]
-							var you = element[3]
-							if (!isrel(zuo)) {
-								var zuo = '-infinity'
-							}
-							if (!isrel(you)) {
-								var you = 'infinity'
-							}
-							var xfw = "(" + zuo + ";" + you + ")"
-							chenchys('h' + i, 2, xfw)
-							chenchys('h' + i, 3, '(-infinity;infinity)')
-						}
-						sxcl();
-						huizhi()
-					}, 5000);
-				}
-			} else {
-				return false
-			}
-		}
+	if (version < 17) {
+		fields[1] = fields[1].split('ن').map(function (row) {
+			if (!row) return row;
+			var values = row.split('|');
+			values[0] = values[0].replace(/^([rxp])=/, '$1:');
+			var lower = values[2] || '-infinity', upper = values[3] || 'infinity';
+			var range = '(' + lower + ';' + upper + ')';
+			// 旧版竖线的上下限约束 y；其余曲线约束 x。
+			values[2] = values[0].indexOf('x:') === 0 ? '(-infinity;infinity)' : range;
+			values[3] = values[0].indexOf('x:') === 0 ? range : '(-infinity;infinity)';
+			return values.join('|');
+		}).join('ن');
 	}
+	pr = fields.join('و³');
+	hslb = []; cllb = []; dlb = []; wzpzlb = []; drawlj = [];
+	xzlb = []; yclb = []; zlb = []; hanshuculiebiao = [];
+	guiji = []; shijixianshiguiji = [];
+	clearLB('all');
+	document.getElementById('wanggexian').innerHTML = '';
+	document.getElementById('hslbxs').innerHTML = '<div style="position:absolute;width:100%;height:100%;z-index:0" onclick="qkxz()"></div>';
+
 	var start = new Date().getTime() // 开始时间
 
 	//导入函数
@@ -2015,7 +1987,7 @@ function huif(m, n) { //导入函数
 		}
 	}
 	var hanshulb = pr.split("و³")[7] //导入文字批注
-	var wzpzlb = []
+	wzpzlb = []
 	if (isrel(hanshulb) == false) {
 		var hanshulb = []
 	} else {
@@ -2051,8 +2023,11 @@ function huif(m, n) { //导入函数
 	}
 	for (var d = 0; d < hanshulb.length; d++) {
 		if (isrel(hanshulb[d]) == false) { } else {
-			yclb.push(hanshulb[d])
-			document.getElementById(hanshulb[d]).style.backgroundColor = ycys
+			var hiddenObject = document.getElementById(hanshulb[d]);
+			if (hiddenObject) {
+				yclb.push(hanshulb[d]);
+				hiddenObject.style.backgroundColor = ycys;
+			}
 		}
 	}
 	//导入批注
@@ -2828,8 +2803,7 @@ function jiesuochilk(cdrfg, stryh) {
 		}
 		if ((zdyset[14] !== "false") || (zdyset[20] !== "false") || (zdyset[24] !== "false")) {
 			zdyset = mrsz
-			//localStorage.setItem("setting", sz_to_zfc(zdyset))
-			localStorage.setItem('setting', localStorage.setItem("setting", sz_to_zfc(zdyset)))
+			localStorage.setItem("setting", sz_to_zfc(zdyset))
 			zxcshsz()
 			if ((stryh !== cdrfg) && (stryh - 3) % 9 > 7) {
 				return false
@@ -3687,9 +3661,10 @@ function compileStr(code) {
 }
 
 function qianzhi(things, t) { //与服务器通信
-	/* 本地合并版：所有消息直接进入本地总线（az_local.js），不再编码发送到远程服务器。
-	   原协议中 dt 消息使用随时间/密码变化的动态密钥，本地模式下无此需要。 */
-	if (typeof AZLocal !== 'undefined' && typeof AZLocal.receive === 'function') {
+	// 解析计算始终走本地总线；手动开启联机后，联机消息使用原服务器协议。
+	var remote = typeof AZOnline !== 'undefined' && AZOnline.routes(things);
+	if (remote && !AZOnline.requireConnection()) return false;
+	if (!remote && typeof AZLocal !== 'undefined' && typeof AZLocal.receive === 'function') {
 		AZLocal.receive(things)
 		return
 	}
@@ -3816,12 +3791,14 @@ function BACK() {
 }
 
 function jrqz(a) {
+	if (typeof AZOnline !== 'undefined' && !AZOnline.requireConnection()) return;
 	qianzhi(("jo" + a + '|' + document.getElementById('fsltmz').value + '|' + gaojilianjishiyongmiyue))
 	hsxz = a
 	document.getElementById('fsltdk').value = a
 }
 
 function xjqz() {
+	if (typeof AZOnline !== 'undefined' && !AZOnline.requireConnection()) return;
 	if (v_i_p[0] == true) { } else {
 		jznotcheshi()
 		return
@@ -3837,8 +3814,7 @@ function addUSE(n) {
 	localStorage.setItem('///////////////////////////', md5(n))
 }
 
-/* 客户端合并版：不再连接远程 WebSocket 服务器。
-   本地环回总线 ws 由 az_local.js 提供（登录 / 房间 / 聊天 / 同步全部本地完成）。 */
+// 本地总线默认可用；远程连接由联机面板手动开启。
 wsonopen = true
 
 
@@ -3892,7 +3868,6 @@ var ltlb = []
 
 function lt(a) {
 	ltlb.push(a)
-	eval()
 }
 
 function yzdc(lb, a) {
@@ -5419,7 +5394,6 @@ function benchmarkI18n() {
 	var english = typeof zdyset != 'undefined' && zdyset[36] == 'en'
 	return english ? {
 		title: 'Performance benchmark',
-		subtitle: 'Calculation, expression, Canvas and browser storage performance test',
 		overall: 'Overall score',
 		idle: 'Not benchmarked yet',
 		ready: 'Last result loaded',
@@ -5455,7 +5429,6 @@ function benchmarkI18n() {
 		scoreSuffix: ' pts'
 	} : {
 		title: '性能跑分',
-		subtitle: '综合测试计算、表达式、Canvas 与浏览器存储性能',
 		overall: '综合得分',
 		idle: '尚未跑分',
 		ready: '已载入最近一次结果',
@@ -5704,7 +5677,6 @@ function applyBenchmarkLanguage() {
 	var text = benchmarkI18n()
 	var labels = {
 		'benchmark-title': text.title,
-		'benchmark-subtitle': text.subtitle,
 		'benchmark-score-label': text.overall,
 		'benchmark-calculation-label': text.calculation,
 		'benchmark-expression-label': text.expression,
@@ -5738,8 +5710,8 @@ function formatBenchmarkDate(dateValue) {
 function drawBenchmarkHistory(history) {
 	var canvas = document.getElementById('benchmark-history-chart')
 	if (!canvas || !canvas.getContext) return
-	var width = canvas.clientWidth || 620
-	var height = canvas.clientHeight || 185
+	var width = canvas.clientWidth || 430
+	var height = canvas.clientHeight || 95
 	var pixelRatio = Math.min(window.devicePixelRatio || 1, 2)
 	canvas.width = Math.round(width * pixelRatio)
 	canvas.height = Math.round(height * pixelRatio)
@@ -6147,4 +6119,3 @@ for (let i = 0; i < aaa.length; i++) {
 	console.log(pen+c[c.length-1]*x[x.length-1],c)
 }
 */
-yijiazaidewenjian.push(3)

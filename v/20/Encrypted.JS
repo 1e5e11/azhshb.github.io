@@ -106,13 +106,12 @@ function zhudbianhua() {
 	}
 	hxxianshi = hh
 
+	xianshikuandu = Number(document.getElementById("bhcv").value)
+	xianshigaodu = Number(document.getElementById("edsde").value)
 
 	pxtonum = accDiv(hxxianshi, xianshikuandu)
 	numtopx = accDiv(xianshikuandu, hxxianshi)
 	xrjqd = Number(document.getElementById("gdrft").value)
-
-	xianshikuandu = Number(document.getElementById("bhcv").value)
-	xianshigaodu = Number(document.getElementById("edsde").value)
 
 	document.getElementById("yzhou").style.left = (ydisX) + "px"
 	document.getElementById("xzhou").style.top = (ydisY) + "px"
@@ -1398,4 +1397,3 @@ function shezhiduixiang() {
 	gnqh('gn13')
 	document.getElementById("ysughzeiurfuhbnb").focus()
 }
-yijiazaidewenjian.push(1)

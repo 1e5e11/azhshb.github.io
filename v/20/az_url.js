@@ -37,7 +37,7 @@
   // 自行解析查询串（decodeURIComponent 不会把 “+” 误转为空格，
   // 这样 index.html?f=x+1 这类未编码链接也能正确工作）
   function getQuery() {
-    var map = {};
+    var map = Object.create(null);
     var s = location.search.replace(/^\?/, "");
     if (!s) return map;
     s.split("&").forEach(function (kv) {
@@ -66,7 +66,6 @@
     var t = q['t'];
     if (t) {
       document.title = t;
-      try { document.getElementById('title').innerHTML = t; } catch (e) { }
     }
 
     // 保存码优先：恢复后仍允许再叠加 f/p 参数
@@ -82,17 +81,20 @@
     // 视图参数
     function setv(id, v) {
       var el = document.getElementById(id);
-      if (el && v !== null && v !== '') el.value = v;
+      if (el && v !== undefined && v !== null && v.trim() !== '' && Number.isFinite(Number(v))) {
+        if (['fvfrv', 'bhcv', 'edsde', 'gdrft'].indexOf(id) !== -1 && Number(v) <= 0) return;
+        el.value = v;
+        hasView = true;
+      }
     }
     var hasView = false;
-    ['x', 'y', 'z', 'w', 'h', 'g'].forEach(function (k) { if (q[k] !== undefined) hasView = true; });
+    setv('decsx', q['x']);
+    setv('decsy', q['y']);
+    setv('fvfrv', q['z']);
+    setv('bhcv', q['w']);
+    setv('edsde', q['h']);
+    setv('gdrft', q['g']);
     if (hasView) {
-      setv('decsx', q['x']);
-      setv('decsy', q['y']);
-      setv('fvfrv', q['z']);
-      setv('bhcv', q['w']);
-      setv('edsde', q['h']);
-      setv('gdrft', q['g']);
       try { if (typeof zhudbianhua === 'function') zhudbianhua(); } catch (e) { }
     }
 
@@ -138,11 +140,13 @@
       } catch (e) { }
       if (q['calcxj'] !== undefined) {
         // 等自动登录（window load）完成后再执行
-        window.addEventListener('load', function () {
+        var calculate = function () {
           setTimeout(function () {
             try { azfy('jxj_bhj'); } catch (e) { console.error('自动计算失败', e); }
           }, 300);
-        });
+        };
+        if (document.readyState === 'complete') calculate();
+        else window.addEventListener('load', calculate, { once: true });
       }
     }
   });

@@ -23,8 +23,7 @@
   -->
   <script type="text/javascript">
     var thisv = 20
-    var yijiazaidewenjian = []
-    var isusehuancun = false
+
     document.addEventListener('DOMContentLoaded', function () {
       try {
         window_onload()
@@ -37,6 +36,8 @@
   <script src="s.js" defer></script>
   <script src="dc.JS" defer></script>
   <script src="la.js" defer></script>
+  <script src="az_pen.js" defer></script>
+  <script src="katex.min.js" defer></script>
   <script src="math.js" defer></script>
   <script src="algebrite.bundle-for-browser.js" defer></script>
   <script src="nerdamer.core.js" defer></script>
@@ -46,7 +47,10 @@
   <script src="az_simplify.js" defer></script>
   <script src="az_local.js" defer></script>
   <script src="az_server_jx.js" defer></script>
+  <script src="az_geometry.js" defer></script>
+  <script src="az_online.js" defer></script>
   <script src="az_url.js" defer></script>
+  <script src="cache-register.js" defer></script>
 
 </head>
 
@@ -119,7 +123,7 @@
 
 
         <input class="vfr" type="button" style="top:50px;left:500px; width: 100px; height: 20px;" id=""
-          onload="l(this,0,16,)" value="同步信息" onclick="TB()" />
+          onload="l(this,0,260)" value="跑分" onclick="openBenchmarkPanel()" />
         <input class="vfr" type="button" style="top:50px;left:390px; width: 100px; height: 20px;" id=""
           onload="l(this,0,17,)" value="设置" onclick="xhysyc('setting')" />
         <input class="vfr" type="button" style="top:50px;left:280px; width: 100px; height: 20px;" id="ydms"
@@ -152,7 +156,7 @@
         <div id="xzhou" style="top: 399px;z-index: -1;"></div>
 
 
-        <canvas id="divdis" onpointerdown="zbxyd()" width="600" height="800"></canvas>
+        <canvas id="divdis" onpointerdown="zbxyd(event)" width="600" height="800"></canvas>
 
         <div id="wanggexian" style="position: absolute; z-index: 1;">
 
@@ -496,9 +500,6 @@
           onload="l(this,77)">啊这函数画板</div>
         <div class="az" style="font-size: 15px;left:0px;top: 120px;width: 100%;text-align: center;" id="morebbxians">*
           @version v* @date </div>
-        <input class="vfr" type="button"
-          style="top:132px;left:0px;right:0px;margin:auto;width:120px;height:20px;" value="跑分"
-          onclick="openBenchmarkPanel()" onload="l(this,0,260)" />
         <div id="rizhi"
           style="position: absolute;top:160px;left:40px;width: 420px;height: 390px;font-size: 18px;border: 1px solid var(--bjsdfz);overflow: auto;border-radius: .15em;webkit-user-select: text;-moz-user-select: text;-o-user-select: text;user-select: text;">
 
@@ -511,100 +512,82 @@
           style="top:565px;left:250px;right: 0px;margin: auto; width: 120px; height: 20px;" onload="l(this,0,87)"
           value="主页" title='http://h.ssssssss.eu.org' onclick="openjc('http://h.ssssssss.eu.org')" />
         <input class="vfr" type="button" style="top:565px;left:0px;right: 0px;margin: auto; width: 120px; height: 20px;"
-          onload="l(this,0,88)" value="联机" onclick="xhysyc('more');xhysyc('LT')" />
+          onload="l(this,0,88)" value="联机" onclick="AZOnline.openPanel()" />
       </div>
       <div id="benchmark-panel" class="red-kuang"
-        style="top:0px;bottom:0px;margin:auto;left:0px;right:0px;width:680px;height:600px;z-index:10;display:none;font-family:'Times New Roman', 宋体,serif,'Liberation Mono';"
+        style="top:0px;bottom:0px;margin:auto;left:0px;right:0px;width:500px;max-width:calc(100% - 20px);height:550px;max-height:calc(100% - 20px);overflow:auto;z-index:10;display:none;font-family:'Times New Roman', 宋体,serif,'Liberation Mono';"
         onpointerdown="docMove(this.id)">
         <div style="position:absolute;top:10px;right:10px;width:20px;height:20px;font-size:18px;z-index:2;"
           onclick="closeBenchmarkPanel()">X</div>
         <div class="az" id="benchmark-title"
-          style="font-size:50px;left:0px;top:20px;width:100%;text-align:center;">性能跑分</div>
-        <div class="az" id="benchmark-subtitle"
-          style="font-size:15px;left:0px;top:75px;width:100%;text-align:center;">综合测试计算、表达式、Canvas 与浏览器存储性能</div>
+          style="font-size:30px;left:0px;top:15px;width:100%;text-align:center;">性能跑分</div>
 
-        <div class="red-kuang" style="top:100px;left:30px;width:620px;height:105px;">
+        <div class="red-kuang" style="top:75px;left:5%;width:90%;height:85px;">
           <div class="vfr" id="benchmark-score"
-            style="top:5px;left:0px;width:100%;height:50px;font-size:45px;line-height:50px;text-align:center;color:var(--bjsdfz);">--</div>
+            style="top:3px;left:0px;width:100%;height:38px;font-size:32px;line-height:38px;text-align:center;">--</div>
           <div class="vfr" id="benchmark-score-label"
-            style="top:55px;left:0px;width:100%;height:20px;font-size:14px;text-align:center;">综合得分</div>
+            style="top:42px;left:0px;width:100%;height:18px;font-size:13px;text-align:center;">综合得分</div>
           <div class="vfr" id="benchmark-status"
-            style="top:75px;left:0px;width:100%;height:20px;font-size:14px;text-align:center;">尚未跑分</div>
-          <div style="position:absolute;top:98px;left:110px;width:400px;height:3px;background-color:var(--wzys-a);overflow:hidden;">
-            <div id="benchmark-progress-bar" style="width:0%;height:100%;background-color:var(--bjsdfz);"></div>
-          </div>
+            style="top:62px;left:2%;width:96%;height:18px;font-size:12px;text-align:center;">尚未跑分</div>
         </div>
 
-        <div class="red-kuang" style="top:215px;left:30px;width:145px;height:95px;">
+        <div class="red-kuang" style="top:170px;left:5%;width:43%;height:75px;">
           <div class="vfr" id="benchmark-calculation-label" style="top:8px;left:0px;width:100%;text-align:center;">数值计算</div>
-          <div class="vfr" id="benchmark-calculation-value" style="top:35px;left:0px;width:100%;font-size:22px;text-align:center;color:var(--bjsdfz);">--</div>
-          <div class="vfr" id="benchmark-calculation-rate" style="top:68px;left:0px;width:100%;font-size:11px;text-align:center;">--</div>
+          <div class="vfr" id="benchmark-calculation-value" style="top:30px;left:0px;width:100%;font-size:18px;text-align:center;">--</div>
+          <div class="vfr" id="benchmark-calculation-rate" style="top:55px;left:0px;width:100%;font-size:10px;text-align:center;">--</div>
         </div>
-        <div class="red-kuang" style="top:215px;left:188px;width:145px;height:95px;">
+        <div class="red-kuang" style="top:170px;right:5%;width:43%;height:75px;">
           <div class="vfr" id="benchmark-expression-label" style="top:8px;left:0px;width:100%;text-align:center;">表达式解析</div>
-          <div class="vfr" id="benchmark-expression-value" style="top:35px;left:0px;width:100%;font-size:22px;text-align:center;color:var(--bjsdfz);">--</div>
-          <div class="vfr" id="benchmark-expression-rate" style="top:68px;left:0px;width:100%;font-size:11px;text-align:center;">--</div>
+          <div class="vfr" id="benchmark-expression-value" style="top:30px;left:0px;width:100%;font-size:18px;text-align:center;">--</div>
+          <div class="vfr" id="benchmark-expression-rate" style="top:55px;left:0px;width:100%;font-size:10px;text-align:center;">--</div>
         </div>
-        <div class="red-kuang" style="top:215px;left:346px;width:145px;height:95px;">
+        <div class="red-kuang" style="top:255px;left:5%;width:43%;height:75px;">
           <div class="vfr" id="benchmark-drawing-label" style="top:8px;left:0px;width:100%;text-align:center;">Canvas 绘制</div>
-          <div class="vfr" id="benchmark-drawing-value" style="top:35px;left:0px;width:100%;font-size:22px;text-align:center;color:var(--bjsdfz);">--</div>
-          <div class="vfr" id="benchmark-drawing-rate" style="top:68px;left:0px;width:100%;font-size:11px;text-align:center;">--</div>
+          <div class="vfr" id="benchmark-drawing-value" style="top:30px;left:0px;width:100%;font-size:18px;text-align:center;">--</div>
+          <div class="vfr" id="benchmark-drawing-rate" style="top:55px;left:0px;width:100%;font-size:10px;text-align:center;">--</div>
         </div>
-        <div class="red-kuang" style="top:215px;left:504px;width:145px;height:95px;">
+        <div class="red-kuang" style="top:255px;right:5%;width:43%;height:75px;">
           <div class="vfr" id="benchmark-storage-label" style="top:8px;left:0px;width:100%;text-align:center;">浏览器存储</div>
-          <div class="vfr" id="benchmark-storage-value" style="top:35px;left:0px;width:100%;font-size:22px;text-align:center;color:var(--bjsdfz);">--</div>
-          <div class="vfr" id="benchmark-storage-rate" style="top:68px;left:0px;width:100%;font-size:10px;text-align:center;">--</div>
+          <div class="vfr" id="benchmark-storage-value" style="top:30px;left:0px;width:100%;font-size:18px;text-align:center;">--</div>
+          <div class="vfr" id="benchmark-storage-rate" style="top:55px;left:0px;width:100%;font-size:9px;text-align:center;">--</div>
         </div>
 
-        <div class="red-kuang" style="top:320px;left:30px;width:620px;height:195px;">
-          <div class="vfr" id="benchmark-history-title" style="top:7px;left:10px;width:160px;font-size:16px;">得分历史趋势</div>
-          <div class="vfr" id="benchmark-history-meta" style="top:8px;right:10px;width:350px;font-size:12px;text-align:right;">结果仅存储在本机</div>
-          <canvas id="benchmark-history-chart" width="600" height="155"
-            style="position:absolute;top:32px;left:10px;width:600px;height:155px;"></canvas>
+        <div class="red-kuang" style="top:340px;left:5%;width:90%;height:125px;">
+          <div class="vfr" id="benchmark-history-title" style="top:5px;left:8px;width:40%;font-size:14px;">得分历史趋势</div>
+          <div class="vfr" id="benchmark-history-meta" style="top:6px;right:8px;width:55%;font-size:10px;text-align:right;">结果仅存储在本机</div>
+          <canvas id="benchmark-history-chart" width="430" height="95"
+            style="position:absolute;top:26px;left:2%;width:96%;height:95px;"></canvas>
         </div>
         <canvas id="benchmark-draw-surface" width="640" height="320" style="display:none;"></canvas>
 
         <input class="vfr" id="benchmark-run" type="button"
-          style="top:530px;left:150px;width:120px;height:20px;" value="开始跑分" onclick="Benchmark()" />
+          style="top:480px;left:10%;width:25%;height:20px;" value="开始跑分" onclick="Benchmark()" />
         <input class="vfr" id="benchmark-export" type="button"
-          style="top:530px;left:280px;width:120px;height:20px;" value="导出结果" onclick="exportBenchmarkHistory()" />
+          style="top:480px;left:37.5%;width:25%;height:20px;" value="导出结果" onclick="exportBenchmarkHistory()" />
         <input class="vfr" id="benchmark-clear" type="button"
-          style="top:530px;left:410px;width:120px;height:20px;" value="清空历史" onclick="clearBenchmarkHistory()" />
+          style="top:480px;right:10%;width:25%;height:20px;" value="清空历史" onclick="clearBenchmarkHistory()" />
         <div class="vfr" id="benchmark-note"
-          style="top:565px;left:0px;width:100%;font-size:12px;text-align:center;">基准得分为 1000；跑分时请保持当前页面在前台。</div>
+          style="top:515px;left:5%;width:90%;font-size:11px;text-align:center;">基准得分为 1000；跑分时请保持当前页面在前台。</div>
       </div>
-      <div id="LT" name="liaotian" class="red-kuang"
-        style="top:0px;bottom:0px;margin: auto;left:0px;right: 0px;width: 500px;height: 600px;z-index: 10; display: none;font-family:'Times New Roman', 宋体,serif,'Liberation Mono';"
-        onpointerdown="docMove(this.id,'true')">
-        <div name="liaotian" class="az"
-          style="font-size: 30px;left:0px;top: 9%;width: 100%;text-align: center;height: 6%;" onload="l(this,88)">联机
-        </div>
-        <div name="liaotian"
-          style="    position: absolute;top:10px;right: 10px;width: 20px;height: 20px;font-size: 18px;z-index: 2;"
-          onclick="xhysyc('LT')">X</div>
-        <input name="liaotian" class="vfr" type="button" style="top:11%;left:3%; width: 25%; height: 4%"
-          onload="l(this,0,89)" value="创建联机" onclick="cjlts()" />
-        <input name="liaotian" class="vfr" type="button" style="top:11%;right:3%; width: 25%; height: 4%"
-          onload="l(this,0,90)" value="加入联机" onclick="jiarults()" />
-        <input name="liaotian" class="vfr" type="button" style="top:6%;left:3%; width: 25%; height: 4%"
-          onload="l(this,0,91)" value="清空聊天" onclick="document.getElementById('ltk').innerHTML=''" />
-        <input name="liaotian" class="vfr" type="button" style="top:6%;right:3%; width: 25%; height: 4%"
-          onload="l(this,0,92)" value="加载聊天记录" onclick="jzltjl()" />
-        <input name="liaotian" class="vfr" style="left: 3%;height: 4%;top: 16%;width: 40%;" placeholder="名字" id='fsltmz'
-          onload="l(this,0,0,93)" />
-        <input name="liaotian" class="vfr" style="right: 3%;height: 4%;top: 16%;width: 40%;" placeholder="联机号"
-          id='fsltdk' onload="l(this,0,0,94)" />
-        <div name="liaotian" id="ltk"
-          style="position: absolute;top:22%;left:3%;width: 94%;height: 63%;font-size: 18px;border: 1px solid var(--bjsdfz);overflow: auto;border-radius: .15em .15em 0px 0px;z-index: 1;">
-        </div>
-
-        <textarea rows="114514" cols="1919810" name="liaotian" class="vfr"
-          style="top:85%;left:3%; width: 80%; height: 10%;border-radius: 0px 0px 0px 4px;;border: 0px;box-shadow: 0 0.7565932872px 5px var(--bjsdfz-a);outline: none;font-size: 40px;background-color: rgba(0, 0, 0, 0);"
-          value="" placeholder="" id='fsltnr'></textarea>
-        <input name="liaotian" class="vfr" type="button"
-          style="top:85%;right:3%; width: 14%; height: 10%;border-radius: 0px 0px 4px 0px;" onload="l(this,0,95)"
-          value="发送" id="fasong" onclick="lt_send()" />
-
+      <div id="LT" name="liaotian" class="red-kuang" onpointerdown="if (!event.target.closest('input,textarea,button,label,[role=button]')) docMove(this.id, 'true')"
+        style="top:0;bottom:0;margin:auto;left:0;right:0;width:500px;max-width:calc(100% - 20px);height:600px;max-height:calc(100% - 20px);overflow:auto;z-index:10;display:none;font-family:'Times New Roman', 宋体,serif,'Liberation Mono';">
+        <div class="az" style="font-size:28px;left:0;top:14px;width:100%;text-align:center;cursor:move;touch-action:none;" onload="l(this,88)">联机</div>
+        <div style="position:absolute;top:10px;right:10px;width:20px;height:20px;font-size:18px;z-index:2;" role="button" tabindex="0" aria-label="关闭联机面板" onclick="xhysyc('LT')" onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); xhysyc('LT'); }">X</div>
+        <label class="vfr" for="online-server" style="top:58px;left:3%;height:20px;">服务器地址</label>
+        <input class="vfr" type="url" id="online-server" style="top:83px;left:3%;width:94%;height:28px;box-sizing:border-box;" placeholder="wss://example.com:8080" autocomplete="off" />
+        <input class="vfr" type="button" id="online-connect" style="top:122px;left:3%;width:28%;height:26px;" value="开启联机" onclick="AZOnline.connect()" />
+        <input class="vfr" type="button" id="online-disconnect" style="top:122px;left:36%;width:28%;height:26px;" value="断开联机" onclick="AZOnline.disconnect()" disabled />
+        <input class="vfr" type="button" data-online-action style="top:122px;right:3%;width:28%;height:26px;" onload="l(this,0,16)" value="同步信息" onclick="AZOnline.sync()" disabled />
+        <div class="vfr" id="online-status" role="status" style="top:157px;left:3%;width:94%;height:36px;font-size:13px;overflow:auto;">本地模式，尚未开启联机</div>
+        <input name="liaotian" class="vfr" type="button" data-online-action style="top:200px;left:3%;width:28%;height:26px;" onload="l(this,0,89)" value="创建联机" onclick="cjlts()" disabled />
+        <input name="liaotian" class="vfr" type="button" data-online-action style="top:200px;left:36%;width:28%;height:26px;" onload="l(this,0,90)" value="加入联机" onclick="jiarults()" disabled />
+        <input name="liaotian" class="vfr" type="button" data-online-action style="top:200px;right:3%;width:28%;height:26px;" onload="l(this,0,92)" value="加载聊天记录" onclick="jzltjl()" disabled />
+        <input name="liaotian" class="vfr" id="fsltmz" style="top:237px;left:3%;width:44%;height:24px;" placeholder="名字" aria-label="名字" onload="l(this,0,0,93)" />
+        <input name="liaotian" class="vfr" id="fsltdk" style="top:237px;right:3%;width:44%;height:24px;" placeholder="联机号" aria-label="联机号" onload="l(this,0,0,94)" />
+        <div name="liaotian" id="ltk" style="position:absolute;top:274px;left:3%;width:94%;height:212px;font-size:18px;border:1px solid var(--bjsdfz);overflow:auto;"></div>
+        <textarea name="liaotian" class="vfr" id="fsltnr" aria-label="聊天内容" style="top:493px;left:3%;width:76%;height:62px;font-size:18px;box-sizing:border-box;"></textarea>
+        <input name="liaotian" class="vfr" type="button" data-online-action id="fasong" style="top:493px;right:3%;width:16%;height:62px;" onload="l(this,0,95)" value="发送" onclick="lt_send()" disabled />
+        <input name="liaotian" class="vfr" type="button" style="top:566px;left:3%;width:120px;height:22px;" onload="l(this,0,91)" value="清空聊天" onclick="document.getElementById('ltk').innerHTML=''" />
       </div>
       <div id="setting" class="red-kuang"
         style="top:0px;bottom:0px;margin: auto;left:0px;right: 0px;width: 500px;height: 600px;z-index: 10; display: none;font-family:'Times New Roman', 宋体,serif,'Liberation Mono';"

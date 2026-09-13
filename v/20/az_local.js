@@ -664,6 +664,14 @@
       expr = normalizeExpr(expr).trim();
       if (expr === "") return "";
       if (expr.indexOf("=") !== -1) return solveEquations(expr);
+      if (window.AZGeometry) {
+        try {
+          var geometry = window.AZGeometry.solve(expr);
+          if (geometry) return geometry.text;
+        } catch (geometryError) {
+          if (geometryError.code !== 'UNSUPPORTED_GEOMETRY') throw geometryError;
+        }
+      }
       /* 优先使用移植自 serverdesktop\AZTXserver2.js 的原服务端解析解引擎（az_server_jx.js），
          仅其化简部分已按要求换成本地化简器。失败时回退到本地符号展开引擎。 */
       if (window.AZServerJX && typeof window.AZServerJX.jxj === "function") {

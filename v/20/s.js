@@ -1521,7 +1521,7 @@ function azgetjd(hs1, hs2, djg, xy, jqd) { //寻找交点
 	var d = -1
 	//console.log(newgetjdn,hs1+"|"+hs2+"|"+jqd)
 	for (var i = 0; i < newgetjdn.length; i++) {
-		if (newgetjdn[i] == hs1 + "|" + hs2 + "|" + jqd || newgetjdn[i] == hs2 + "|" + hs1 + "|" + jqd) {
+		if (newgetjdn[i] == hs1 + "|" + hs2 + "|" + jqd) {
 			var d = i
 			break
 		}
@@ -1529,63 +1529,23 @@ function azgetjd(hs1, hs2, djg, xy, jqd) { //寻找交点
 	//console.log(d)
 	if (d == -1) { //之前没算过!
 
-		if (hslb[hs1].split("|")[0].substring(0, 2) == "x:" || hslb[hs2].split("|")[0].substring(0, 2) == "x:") { //平行于y的直线
-			// console.log('pxy')
-			//console.log(hslb[hs1].split("|")[0],hslb[hs2].split("|")[0])
-			if (hslb[hs1].split("|")[0].substring(0, 2) == "x:") {
-				if (hslb[hs2].split("|")[0].substring(0, 2) == "x:") {
-					var scsz = [
-						[]
-					]
-				} else {
-					var ae = jxs_l_for_azhs(hslb[hs1].split("|")[0].substring(2, hslb[hs1].split("|")[0].length))
-					//console.log(1)
-					if (hslb[hs2].split("|")[0].substring(0, 2) == "r:") {
-						var h = hslb[hs2].split("|")[0]
-						h = h.substring(2, h.length).split(';')
-						var hanshu = 'sqrt((' + h[2] + ')^2_(' + ae + '_(' + h[0] + '))^2)+' + h[1]
-						var scsz = [
-							[ae, jxs_l_for_azhs(hanshu)],
-							[ae, jxs_l_for_azhs('_' + hanshu)]
-						]
-
-					} else {
-						var jd_y = jxs_l_for_azhs(hslb[hs2].split("|")[0], ae)
-						var jd_x = ae
-						var xys = [jd_x, jd_y]
-						var scsz = [xys]
+		if (hslb[hs1].split('|')[0].startsWith('x:') || hslb[hs2].split('|')[0].startsWith('x:')) {
+			var first = hslb[hs1].split('|')[0], second = hslb[hs2].split('|')[0];
+			var vertical = first.startsWith('x:') ? first : second;
+			var other = first.startsWith('x:') ? second : first;
+			var scsz = [];
+			if (!other.startsWith('x:')) {
+				var ae = jxs_l_for_azhs(vertical.slice(2));
+				if (other.startsWith('r:')) {
+					var circle = other.slice(2).split(';').map(function (value) { return jxs_l_for_azhs(value); });
+					var radicand = circle[2] * circle[2] - Math.pow(ae - circle[0], 2);
+					var tolerance = 64 * Number.EPSILON * Math.max(1, circle[2] * circle[2]);
+					if (radicand >= -tolerance) {
+						var delta = Math.sqrt(Math.max(0, radicand));
+						scsz = [[ae, circle[1] + delta], [ae, circle[1] - delta]];
 					}
-
-
-				}
-			} else if (hslb[hs2].split("|")[0].substring(0, 2) == "x:") {
-				if (hslb[hs1].split("|")[0].substring(0, 2) == "x:") {
-					var scsz = [
-						[]
-					]
-				} else {
-					var ae = jxs_l_for_azhs(hslb[hs2].split("|")[0].substring(2, hslb[hs2].split("|")[0].length))
-					console.log(1)
-					if (hslb[hs1].split("|")[0].substring(0, 2) == "r:") {
-						var h = hslb[hs1].split("|")[0]
-						h = h.substring(2, h.length).split(';')
-						var hanshu = 'sqrt((' + h[2] + ')^2_(' + ae + '_(' + h[0] + '))^2)+' + h[1]
-						console.log(hanshu)
-						var scsz = [
-							[ae, jxs_l_for_azhs(hanshu)],
-							[ae, jxs_l_for_azhs('_' + hanshu)]
-						]
-
-					} else {
-						var jd_y = jxs_l_for_azhs(hslb[hs1].split("|")[0], ae)
-						var jd_x = ae
-						var xys = [jd_x, jd_y]
-						var scsz = [xys]
-					}
-
-				}
+				} else scsz = [[ae, jxs_l_for_azhs(other, ae)]];
 			}
-			//  console.log(scsz)
 		} else
 			if (zdyset[17] == 'true') {
 				if (yhsjx(hslb[hs1].split("|")[0])[0] == true || yhsjx(hslb[hs2].split("|")[0])[0] == true) { //有圆函数
@@ -1658,6 +1618,13 @@ function azgetjd(hs1, hs2, djg, xy, jqd) { //寻找交点
 			}
 
 
+		// Reject non-real intersections and count a tangent point only once.
+		scsz = scsz.filter(function (point, index, all) {
+			if (!point || !Number.isFinite(point[0]) || !Number.isFinite(point[1])) return false;
+			return !all.slice(0, index).some(function (previous) {
+				return previous && Math.hypot(point[0] - previous[0], point[1] - previous[1]) <= 64 * Number.EPSILON * Math.max(1, Math.abs(point[0]), Math.abs(point[1]));
+			});
+		});
 		newgetjdn.push(hs1 + "|" + hs2 + "|" + jqd)
 
 		newgetjdz.push(scsz)
@@ -2207,7 +2174,7 @@ function azgethsz(h, x, y) {
 	if (isrel(y)) {
 		var ret = jxs_l_for_azhs(hslb[h].split('|')[0], y)
 	} else {
-		var ret = jxs_l_for_azhs(hslb[h].split('|')[0], cllbz[x])
+		var ret = jxs_l_for_azhs(hslb[h].split('|')[0], clzlb[x])
 	}
 
 	if (jlks == true) {
@@ -4367,4 +4334,3 @@ a*x^2+b*x*y+c*y^2+d*x+e*y+f=0
 g*x^2+h*x*y+j*y^2+k*x+l*y+m=0
 
 */
-yijiazaidewenjian.push(2)
